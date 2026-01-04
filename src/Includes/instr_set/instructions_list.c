@@ -9554,6 +9554,7 @@ void __bea_callspec__ xchg_ecx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[1+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG9;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9573,6 +9574,7 @@ void __bea_callspec__ xchg_ecx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[1+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG9;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9592,6 +9594,7 @@ void __bea_callspec__ xchg_ecx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[1+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG9;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9629,6 +9632,7 @@ void __bea_callspec__ xchg_edx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[2+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG10;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9648,6 +9652,7 @@ void __bea_callspec__ xchg_edx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[2+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG10;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9667,6 +9672,7 @@ void __bea_callspec__ xchg_edx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[2+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG10;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9704,6 +9710,7 @@ void __bea_callspec__ xchg_ebx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[3+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG11;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9723,6 +9730,7 @@ void __bea_callspec__ xchg_ebx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[3+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG11;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9742,6 +9750,7 @@ void __bea_callspec__ xchg_ebx(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[3+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG11;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9779,6 +9788,7 @@ void __bea_callspec__ xchg_esp(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[4+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG12;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9798,6 +9808,7 @@ void __bea_callspec__ xchg_esp(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[4+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG12;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9817,6 +9828,7 @@ void __bea_callspec__ xchg_esp(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[4+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG12;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9854,6 +9866,7 @@ void __bea_callspec__ xchg_ebp(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[5+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG13;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9873,6 +9886,7 @@ void __bea_callspec__ xchg_ebp(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[5+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG13;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9892,6 +9906,7 @@ void __bea_callspec__ xchg_ebp(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[5+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG13;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9930,6 +9945,7 @@ void __bea_callspec__ xchg_esi(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[6+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG14;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9949,6 +9965,7 @@ void __bea_callspec__ xchg_esi(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[6+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG14;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -9968,6 +9985,7 @@ void __bea_callspec__ xchg_esi(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[6+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG14;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -10005,6 +10023,7 @@ void __bea_callspec__ xchg_edi(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers64Bits[7+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG15;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -10024,6 +10043,7 @@ void __bea_callspec__ xchg_edi(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers32Bits[7+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG15;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
@@ -10043,6 +10063,7 @@ void __bea_callspec__ xchg_edi(PDISASM pMyDisasm)
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[7+8]);
             #endif
+            (*pMyDisasm).Operand2.Registers.gpr = REG15;
         }
         else {
             #ifndef BEA_LIGHT_DISASSEMBLY
