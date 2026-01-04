@@ -620,19 +620,6 @@ const char * __bea_callspec__ getNumFormat(long MyNumber)
   }
 }
 
-long __bea_callspec__ specific_pop(PDISASM pMyDisasm)
-{
-  long N;
-  if (
-    ((*pMyDisasm).Instruction.Opcode == 0x8f)) {
-      N = GV.OperandSize / 8;
-    }
-    else {
-      N = 0;
-    }
-    return N;
-}
-
 size_t __bea_callspec__ printDisp8(OPTYPE* pMyOperand, size_t i, PDISASM pMyDisasm, long MyNumber)
 {
   size_t j;
@@ -641,9 +628,6 @@ size_t __bea_callspec__ printDisp8(OPTYPE* pMyOperand, size_t i, PDISASM pMyDisa
   if ((GV.EVEX.state == InUsePrefix) && (GV.EVEX.tupletype != 0)) {
     N = getDisp8N(pMyDisasm);
     if (N != -1) MyNumber = MyNumber * N;
-  }
-  if ((GV.RM_ == 4) && (GV.BASE_ == 4) && (GV.Architecture >=32)) {
-    MyNumber = MyNumber + specific_pop(pMyDisasm);
   }
   if (MyNumber < 0) {
     #ifndef BEA_LIGHT_DISASSEMBLY
@@ -672,10 +656,6 @@ size_t __bea_callspec__ printDisp8(OPTYPE* pMyOperand, size_t i, PDISASM pMyDisa
 size_t __bea_callspec__ printDisp32(OPTYPE* pMyOperand, size_t i, PDISASM pMyDisasm, long MyNumber)
 {
   size_t j;
-
-  if ((GV.RM_ == 4) && (GV.BASE_ == 4) && (GV.Architecture >=32)) {
-    MyNumber = MyNumber + specific_pop(pMyDisasm);
-  }
 
   if (MyNumber < 0) {
       #ifndef BEA_LIGHT_DISASSEMBLY
