@@ -186,6 +186,9 @@ void __bea_callspec__ OperandSize8Reg(OPTYPE* pMyOperand, PDISASM pMyDisasm, siz
     (*pMyOperand).OpType = REGISTER_TYPE;
     (*pMyOperand).Registers.type = GENERAL_REG;
     (*pMyOperand).Registers.gpr = REGS8BITS[index+0];
+    if (index >= 4) {
+				(*pMyOperand).OpPosition = HighPosition;
+    }
     (*pMyOperand).OpSize = 8;
   }
   else {
@@ -1460,6 +1463,9 @@ void __bea_callspec__ OperandSize8RM(OPTYPE* pMyOperand, PDISASM pMyDisasm, size
           (*pMyOperand).OpType = REGISTER_TYPE;
           (*pMyOperand).Registers.type = GENERAL_REG;
           (*pMyOperand).Registers.gpr = REGS8BITS[index+0];
+          if (index >= 4) {
+              (*pMyOperand).OpPosition = HighPosition;
+          }
           (*pMyOperand).OpSize = 8;
       }
       else {
