@@ -808,11 +808,19 @@ void __bea_callspec__ ALIb(PDISASM pMyDisasm)
     (void) CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand2.OpMnemonic,"%.2X",(Int64) MyNumber);
   #endif
   (*pMyDisasm).Instruction.Immediat = MyNumber;
-  #ifndef BEA_LIGHT_DISASSEMBLY
-    (void) strcpy((char*) &(*pMyDisasm).Operand1.OpMnemonic, Registers8Bits[0]);
-  #endif
+  if (GV.REX.B_ == 1 && (*pMyDisasm).Instruction.Category == GENERAL_PURPOSE_INSTRUCTION+DATA_TRANSFER) {
+    #ifndef BEA_LIGHT_DISASSEMBLY
+      (void) strcpy((char*) &(*pMyDisasm).Operand1.OpMnemonic, Registers8Bits[0+8]);
+    #endif
+    (*pMyDisasm).Operand1.Registers.gpr = REG8;
+  }
+  else {
+    #ifndef BEA_LIGHT_DISASSEMBLY
+      (void) strcpy((char*) &(*pMyDisasm).Operand1.OpMnemonic, Registers8Bits[0]);
+    #endif
+    (*pMyDisasm).Operand1.Registers.gpr = REG0;
+  }
   (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
-  (*pMyDisasm).Operand1.Registers.gpr = REG0;
   (*pMyDisasm).Operand1.OpSize = 8;
   (*pMyDisasm).Operand2.OpType = CONSTANT_TYPE+ABSOLUTE_;
   (*pMyDisasm).Operand2.OpSize = 8;
@@ -847,6 +855,7 @@ void __bea_callspec__ eAX_Iv(PDISASM pMyDisasm)
           #ifndef BEA_LIGHT_DISASSEMBLY
              (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers64Bits[0+8]);
           #endif
+          (*pMyDisasm).Operand1.Registers.gpr = REG8;
       }
       else {
           #ifndef BEA_LIGHT_DISASSEMBLY
@@ -869,6 +878,7 @@ void __bea_callspec__ eAX_Iv(PDISASM pMyDisasm)
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers32Bits[0+8]);
         #endif
+        (*pMyDisasm).Operand1.Registers.gpr = REG8;
       }
       else {
         #ifndef BEA_LIGHT_DISASSEMBLY
@@ -891,6 +901,7 @@ void __bea_callspec__ eAX_Iv(PDISASM pMyDisasm)
           #ifndef BEA_LIGHT_DISASSEMBLY
              (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[0+8]);
           #endif
+          (*pMyDisasm).Operand1.Registers.gpr = REG8;
       }
       else {
           #ifndef BEA_LIGHT_DISASSEMBLY
