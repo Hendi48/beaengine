@@ -6772,12 +6772,20 @@ void __bea_callspec__ pop_reg(PDISASM pMyDisasm, int index)
           break;
 
         case 16:
-          #ifndef BEA_LIGHT_DISASSEMBLY
-             (void) strcpy((char*) &(*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[index]);
-          #endif
+          if (GV.REX.B_ == 0) {
+              #ifndef BEA_LIGHT_DISASSEMBLY
+                 (void) strcpy((char*) &(*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[index]);
+              #endif
+              (*pMyDisasm).Operand1.Registers.gpr = REGS[index];
+          }
+          else {
+              #ifndef BEA_LIGHT_DISASSEMBLY
+                 (void) strcpy((char*) &(*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[index+8]);
+              #endif
+              (*pMyDisasm).Operand1.Registers.gpr = REGS[index+8];
+          }
           (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;
           (*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
-          (*pMyDisasm).Operand1.Registers.gpr = REGS[index];
           (*pMyDisasm).Operand1.OpSize = 16;
           (*pMyDisasm).Operand2.OpSize = 16;
       }
