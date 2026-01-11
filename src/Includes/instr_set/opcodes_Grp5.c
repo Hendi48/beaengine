@@ -134,7 +134,7 @@ void __bea_callspec__ G5_Ev(PDISASM pMyDisasm)
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "push ");
         #endif
-        if (GV.Architecture == 64) {
+        if (GV.Architecture == 64 && (pMyDisasm->Prefix.Number == 0 || pMyDisasm->Prefix.OperandSize != InUsePrefix)) {
             GV.OperandSize = 64;
         }
         if (GV.OperandSize == 64) {
