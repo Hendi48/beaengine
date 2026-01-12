@@ -3434,7 +3434,7 @@ void __bea_callspec__ jl_near(PDISASM pMyDisasm)
  * ======================================= */
 void __bea_callspec__ jnl_near(PDISASM pMyDisasm)
 {
-  jcc_near(pMyDisasm, "jl ", 122, JNL);
+  jcc_near(pMyDisasm, "jnl ", 122, JNL);
 }
 
 /* =======================================
