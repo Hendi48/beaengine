@@ -7341,12 +7341,20 @@ void __bea_callspec__ push_reg(PDISASM pMyDisasm, int index)
           (*pMyDisasm).Operand1.OpSize = 64;
           break;
         case 16:
-          #ifndef BEA_LIGHT_DISASSEMBLY
-             (void) strcpy((char*) &(*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[index]);
-          #endif
+          if (GV.REX.B_ == 0) {
+              #ifndef BEA_LIGHT_DISASSEMBLY
+                (void) strcpy((char*) &(*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[index]);
+              #endif
+              (*pMyDisasm).Operand2.Registers.gpr = REGS[index];
+          }
+          else {
+              #ifndef BEA_LIGHT_DISASSEMBLY
+                (void) strcpy((char*) &(*pMyDisasm).Operand2.OpMnemonic, Registers16Bits[index+8]);
+              #endif
+              (*pMyDisasm).Operand2.Registers.gpr = REGS[index+8];
+          }
           (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;
           (*pMyDisasm).Operand2.Registers.type = GENERAL_REG;
-          (*pMyDisasm).Operand2.Registers.gpr = REGS[index];
           (*pMyDisasm).Operand2.OpSize = 16;
           (*pMyDisasm).Operand1.OpSize = 16;
       }
