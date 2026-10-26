@@ -30,7 +30,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0xfc5)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pextrw ')
-        assert_equal(myDisasm.repr(), 'pextrw ax, mm0, 22h')
+        assert_equal(myDisasm.repr(), 'pextrw eax, mm0, 22h')
         assert_equal(myDisasm.infos.Instruction.Immediat, 0x22)
 
         # 66 0F C5 /r ib
@@ -41,7 +41,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0xfc5)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pextrw ')
-        assert_equal(myDisasm.repr(), 'pextrw ax, xmm0, 22h')
+        assert_equal(myDisasm.repr(), 'pextrw eax, xmm0, 22h')
         assert_equal(myDisasm.infos.Instruction.Immediat, 0x22)
 
         # VEX.128.66.0F.W0 C5 /r ib

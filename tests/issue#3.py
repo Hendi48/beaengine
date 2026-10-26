@@ -324,7 +324,7 @@ class TestSuite:
         myDisasm = Disasm(Buffer)
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'bt ')
-        assert_equal(myDisasm.infos.Operand1.AccessMode, WRITE)
+        assert_equal(myDisasm.infos.Operand1.AccessMode, READ)
 
         Buffer = bytes.fromhex('0fab08')
         myDisasm = Disasm(Buffer)
@@ -342,7 +342,7 @@ class TestSuite:
         myDisasm = Disasm(Buffer)
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'bt ')
-        assert_equal(myDisasm.infos.Operand1.AccessMode, WRITE)
+        assert_equal(myDisasm.infos.Operand1.AccessMode, READ)
 
         Buffer = bytes.fromhex('0fbb08')
         myDisasm = Disasm(Buffer)

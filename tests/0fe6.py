@@ -161,7 +161,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0xfe6)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'cvtdq2pd ')
-        assert_equal(myDisasm.repr(), 'cvtdq2pd xmm4, xmmword ptr [rax]')
+        assert_equal(myDisasm.repr(), 'cvtdq2pd xmm4, qword ptr [rax]')
 
         # VEX.128.F3.0F.WIG E6 /r
         # VCVTDQ2PD xmm1, xmm2/m64

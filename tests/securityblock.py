@@ -972,9 +972,15 @@ class TestSuite:
         assert_equal(myDisasm.infos.Reserved_.RM_, 4)
         assert_equal(myDisasm.infos.Reserved_.EIP_ - offset, 8)
 
+        # read() resets SecurityBlock to the buffer size: the whole 5 bytes are available
         Buffer = bytes.fromhex('e811223344')
         myDisasm = Disasm(Buffer)
-        myDisasm.infos.SecurityBlock = 4
+        myDisasm.infos.VirtualAddr = 0x400000
+        myDisasm.read()
+        assert_equal(myDisasm.length, 5)
+
+        Buffer = bytes.fromhex('e8112233')
+        myDisasm = Disasm(Buffer)
         myDisasm.infos.VirtualAddr = 0x400000
         offset = myDisasm.infos.offset
         myDisasm.read()
