@@ -70,6 +70,11 @@ void __bea_callspec__ CompleteInstructionFields (PDISASM pMyDisasm)
   }
   if ((*pMyDisasm).Prefix.LockPrefix == InvalidPrefix) {
     GV.ERROR_OPCODE = UD_;
+  }  /* rep/repe/repne string instructions count rCX down */
+  if ((((*pMyDisasm).Prefix.RepPrefix == InUsePrefix) || ((*pMyDisasm).Prefix.RepnePrefix == InUsePrefix)) &&
+      (((*pMyDisasm).Instruction.Category & 0xFFFF) == STRING_INSTRUCTION)) {
+    (*pMyDisasm).Instruction.ImplicitModifiedRegs.type |= GENERAL_REG;
+    (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr |= REG1;
   }
 }
 
@@ -957,13 +962,6 @@ Int32 __bea_callspec__ StackOperandSize(PDISASM pMyDisasm)
  * ==================================================================== */
 void __bea_callspec__ FillFlags(PDISASM pMyDisasm, int index)
 {
-  Int64 regType, regSpecial;
-  regType = (*pMyDisasm).Instruction.ImplicitModifiedRegs.type;
-  regSpecial = (*pMyDisasm).Instruction.ImplicitModifiedRegs.special;
-  regType = regType & SPECIAL_REG;
-  regSpecial = regSpecial & REG0;
-  (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = regType;
-  (*pMyDisasm).Instruction.ImplicitModifiedRegs.special = regSpecial;
   (*pMyDisasm).Instruction.Flags = EFLAGS_TABLE[index];
 }
 /* ====================================================================
