@@ -848,20 +848,13 @@ void __bea_callspec__ eAX_Iv(PDISASM pMyDisasm)
       (*pMyDisasm).Operand2.OpSize = 32;
       MyNumber = *((UInt32*)(UIntPtr) (GV.EIP_+1));
       #ifndef BEA_LIGHT_DISASSEMBLY
-         (void) CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand2.OpMnemonic,"%.16llX",(Int64) MyNumber);
+         (void) CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand2.OpMnemonic,"%.16llX",(Int64) (Int32) MyNumber);
       #endif
       (*pMyDisasm).Instruction.Immediat = MyNumber;
-       if (GV.REX.B_ == 1) {
-          #ifndef BEA_LIGHT_DISASSEMBLY
-             (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers64Bits[0+8]);
-          #endif
-          (*pMyDisasm).Operand1.Registers.gpr = REG8;
-      }
-      else {
-          #ifndef BEA_LIGHT_DISASSEMBLY
-             (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers64Bits[0]);
-          #endif
-      }
+      /* the accumulator is fixed : REX.B does not apply */
+      #ifndef BEA_LIGHT_DISASSEMBLY
+         (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers64Bits[0]);
+      #endif
       GV.EIP_+= 5;
     }
     else if (GV.OperandSize == 32) {
@@ -874,17 +867,10 @@ void __bea_callspec__ eAX_Iv(PDISASM pMyDisasm)
          (void) CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand2.OpMnemonic,"%.8X",(Int64) MyNumber);
       #endif
       (*pMyDisasm).Instruction.Immediat = MyNumber;
-       if (GV.REX.B_ == 1) {
-        #ifndef BEA_LIGHT_DISASSEMBLY
-           (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers32Bits[0+8]);
-        #endif
-        (*pMyDisasm).Operand1.Registers.gpr = REG8;
-      }
-      else {
-        #ifndef BEA_LIGHT_DISASSEMBLY
-           (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers32Bits[0]);
-        #endif
-      }
+      /* the accumulator is fixed : REX.B does not apply */
+      #ifndef BEA_LIGHT_DISASSEMBLY
+         (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers32Bits[0]);
+      #endif
       GV.EIP_+= 5;
     }
     else {
@@ -897,17 +883,10 @@ void __bea_callspec__ eAX_Iv(PDISASM pMyDisasm)
          (void) CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand2.OpMnemonic,"%.8X", (Int64) MyNumber);
       #endif
       (*pMyDisasm).Instruction.Immediat = MyNumber;
-       if (GV.REX.B_ == 1) {
-          #ifndef BEA_LIGHT_DISASSEMBLY
-             (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[0+8]);
-          #endif
-          (*pMyDisasm).Operand1.Registers.gpr = REG8;
-      }
-      else {
-          #ifndef BEA_LIGHT_DISASSEMBLY
-             (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[0]);
-          #endif
-      }
+      /* the accumulator is fixed : REX.B does not apply */
+      #ifndef BEA_LIGHT_DISASSEMBLY
+         (void) strcpy ((char*) (*pMyDisasm).Operand1.OpMnemonic, Registers16Bits[0]);
+      #endif
       GV.EIP_+= 3;
     }
     if (
