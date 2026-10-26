@@ -107,7 +107,8 @@ void __bea_callspec__ G14_(PDISASM pMyDisasm)
     }
     GV.REGOPCODE = ((*((UInt8*)(UIntPtr) (GV.EIP_+1))) >> 3) & 0x7;
     if (GV.REGOPCODE == 2) {
-      if (GV.OperandSize == 16) {
+      if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
+        (*pMyDisasm).Prefix.OperandSize = MandatoryPrefix;
         (*pMyDisasm).Instruction.Category = SSE_INSTRUCTION+SHIFT_ROTATE;
         GV.MemDecoration = Arg1dqword;
         GV.Register_ = SSE_REG;
@@ -126,7 +127,8 @@ void __bea_callspec__ G14_(PDISASM pMyDisasm)
       getImmediat8(&(*pMyDisasm).Operand2, pMyDisasm);
     }
     else if (GV.REGOPCODE == 3) {
-      if (GV.OperandSize == 16) {
+      if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
+        (*pMyDisasm).Prefix.OperandSize = MandatoryPrefix;
         (*pMyDisasm).Instruction.Category = SSE_INSTRUCTION+SHIFT_ROTATE;
         GV.MemDecoration = Arg1dqword;
         GV.Register_ = SSE_REG;
@@ -143,7 +145,8 @@ void __bea_callspec__ G14_(PDISASM pMyDisasm)
       }
     }
     else if (GV.REGOPCODE == 6) {
-      if (GV.OperandSize == 16) {
+      if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
+        (*pMyDisasm).Prefix.OperandSize = MandatoryPrefix;
         (*pMyDisasm).Instruction.Category = SSE_INSTRUCTION+SHIFT_ROTATE;
         GV.MemDecoration = Arg1dqword;
         GV.Register_ = SSE_REG;
@@ -162,7 +165,8 @@ void __bea_callspec__ G14_(PDISASM pMyDisasm)
       getImmediat8(&(*pMyDisasm).Operand2, pMyDisasm);
     }
     else if (GV.REGOPCODE == 7) {
-      if (GV.OperandSize == 16) {
+      if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
+        (*pMyDisasm).Prefix.OperandSize = MandatoryPrefix;
         (*pMyDisasm).Instruction.Category = SSE_INSTRUCTION+SHIFT_ROTATE;
         GV.MemDecoration = Arg1dqword;
         GV.ImmediatSize = 8;
