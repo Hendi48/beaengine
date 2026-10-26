@@ -24486,19 +24486,19 @@ void __bea_callspec__ movd_EP(PDISASM pMyDisasm)
     (*pMyDisasm).Instruction.Category = MMX_INSTRUCTION+DATA_TRANSFER;
     /* ========= 0xf3 */
     if (GV.PrefRepe == 1) {
+      /* movq xmm, xmm/m64 */
       (*pMyDisasm).Prefix.RepPrefix = MandatoryPrefix;
+      (*pMyDisasm).Instruction.Category = SSE2_INSTRUCTION+DATA_TRANSFER;
       GV.MemDecoration = Arg2qword;
       #ifndef BEA_LIGHT_DISASSEMBLY
         (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "movq ");
       #endif
-      MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
       GV.Register_ = SSE_REG;
-      Reg_Opcode(&(*pMyDisasm).Operand2, pMyDisasm);
-      GV.EIP_ += GV.DECALAGE_EIP+2;
+      GxEx(pMyDisasm);
     }
     /* ========== 0x66 */
     else if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
-      GV.OperandSize = GV.OriginalOperandSize;
+      GV.OperandSize = (GV.REX.W_ == 1) ? 64 : 32;
       (*pMyDisasm).Prefix.OperandSize = MandatoryPrefix;
       if (GV.REX.W_ == 1) {
         GV.MemDecoration = Arg1qword;
@@ -24579,7 +24579,6 @@ void __bea_callspec__ movd_PE(PDISASM pMyDisasm)
     (*pMyDisasm).Instruction.Category = MMX_INSTRUCTION+DATA_TRANSFER;
      /* ========== 0x66 */
     if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
-      GV.OperandSize = GV.OriginalOperandSize;
       (*pMyDisasm).Prefix.OperandSize = MandatoryPrefix;
       if (GV.REX.W_ == 1) {
         #ifndef BEA_LIGHT_DISASSEMBLY
@@ -24594,7 +24593,6 @@ void __bea_callspec__ movd_PE(PDISASM pMyDisasm)
         GV.MemDecoration = Arg2dword;
       }
       GV.Register_ = SSE_REG;
-      GxEx(pMyDisasm);
     }
     else {
       if (GV.REX.W_ == 1) {
@@ -24610,7 +24608,16 @@ void __bea_callspec__ movd_PE(PDISASM pMyDisasm)
         #endif
       }
       GV.Register_ = MMX_REG;
-      GxEx(pMyDisasm);
+    }
+    /* r/m is a general purpose register (r32 or r64 with REX.W) */
+    {
+      int reg_type = GV.Register_;
+      GV.Register_ = 0;
+      GV.OperandSize = (GV.REX.W_ == 1) ? 64 : 32;
+      MOD_RM(&(*pMyDisasm).Operand2, pMyDisasm);
+      GV.Register_ = reg_type;
+      Reg_Opcode(&(*pMyDisasm).Operand1, pMyDisasm);
+      GV.EIP_ += GV.DECALAGE_EIP+2;
     }
   }
 }
