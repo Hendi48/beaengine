@@ -106,6 +106,22 @@ void __bea_callspec__ PrefREPE(PDISASM pMyDisasm)
 }
 
 /* ====================================================================
+ *      Only the last segment override counts : previous ones become
+ *      superfluous. In 64-bit mode es/cs/ss/ds overrides are ignored and
+ *      do not cancel fs/gs.
+ * ==================================================================== */
+void __bea_callspec__ DemoteSegmentPrefixes(PDISASM pMyDisasm)
+{
+    if ((*pMyDisasm).Prefix.CSPrefix == InUsePrefix) (*pMyDisasm).Prefix.CSPrefix = SuperfluousPrefix;
+    if ((*pMyDisasm).Prefix.DSPrefix == InUsePrefix) (*pMyDisasm).Prefix.DSPrefix = SuperfluousPrefix;
+    if ((*pMyDisasm).Prefix.ESPrefix == InUsePrefix) (*pMyDisasm).Prefix.ESPrefix = SuperfluousPrefix;
+    if ((*pMyDisasm).Prefix.SSPrefix == InUsePrefix) (*pMyDisasm).Prefix.SSPrefix = SuperfluousPrefix;
+    if ((*pMyDisasm).Prefix.FSPrefix == InUsePrefix) (*pMyDisasm).Prefix.FSPrefix = SuperfluousPrefix;
+    if ((*pMyDisasm).Prefix.GSPrefix == InUsePrefix) (*pMyDisasm).Prefix.GSPrefix = SuperfluousPrefix;
+    GV.SEGMENTFS = 0;
+}
+
+/* ====================================================================
  *      Legacy Prefix 2Eh-Group 2
  * ==================================================================== */
 void __bea_callspec__ PrefSEGCS(PDISASM pMyDisasm)
@@ -115,6 +131,7 @@ void __bea_callspec__ PrefSEGCS(PDISASM pMyDisasm)
       GV.ERROR_OPCODE = UD_;
     }
     ResetREX(pMyDisasm);
+    if (GV.Architecture != 64) DemoteSegmentPrefixes(pMyDisasm);
     (*pMyDisasm).Prefix.CSPrefix = InUsePrefix;
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
@@ -133,6 +150,7 @@ void __bea_callspec__ PrefSEGDS(PDISASM pMyDisasm)
       GV.ERROR_OPCODE = UD_;
     }
     ResetREX(pMyDisasm);
+    if (GV.Architecture != 64) DemoteSegmentPrefixes(pMyDisasm);
     (*pMyDisasm).Prefix.DSPrefix = InUsePrefix;
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
@@ -151,6 +169,7 @@ void __bea_callspec__ PrefSEGES(PDISASM pMyDisasm)
       GV.ERROR_OPCODE = UD_;
     }
     ResetREX(pMyDisasm);
+    if (GV.Architecture != 64) DemoteSegmentPrefixes(pMyDisasm);
     (*pMyDisasm).Prefix.ESPrefix = InUsePrefix;
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
@@ -169,6 +188,7 @@ void __bea_callspec__ PrefSEGFS(PDISASM pMyDisasm)
       GV.ERROR_OPCODE = UD_;
     }
     ResetREX(pMyDisasm);
+    DemoteSegmentPrefixes(pMyDisasm);
     (*pMyDisasm).Prefix.FSPrefix = InUsePrefix;
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
@@ -188,6 +208,7 @@ void __bea_callspec__ PrefSEGGS(PDISASM pMyDisasm)
       GV.ERROR_OPCODE = UD_;
     }
     ResetREX(pMyDisasm);
+    DemoteSegmentPrefixes(pMyDisasm);
     (*pMyDisasm).Prefix.GSPrefix = InUsePrefix;
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
@@ -207,6 +228,7 @@ void __bea_callspec__ PrefSEGSS(PDISASM pMyDisasm)
       GV.ERROR_OPCODE = UD_;
     }
     ResetREX(pMyDisasm);
+    if (GV.Architecture != 64) DemoteSegmentPrefixes(pMyDisasm);
     (*pMyDisasm).Prefix.SSPrefix = InUsePrefix;
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
@@ -229,15 +251,7 @@ void __bea_callspec__ PrefOpSize(PDISASM pMyDisasm)
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
     GV.NB_PREFIX++;
-    GV.OriginalOperandSize = GV.OperandSize;  /* if GV.OperandSize is used as a mandatory prefix, keep the real operandsize value */
-    if (GV.Architecture == 16) {
-        GV.OperandSize = 32;
-    }
-    else {
-        if (GV.OperandSize != 64) {
-            GV.OperandSize = 16;
-        }
-    }
+    /* OperandSize / OriginalOperandSize were set by ResetREX */
     (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
     if (GV.VEX.state != InUsePrefix) {
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
@@ -267,7 +281,10 @@ void __bea_callspec__ PrefOpSize(PDISASM pMyDisasm)
  * ==================================================================== */
 void __bea_callspec__ PrefAdSize(PDISASM pMyDisasm)
 {
+    /* a repeated 67h does not toggle the address size again */
+    int toggle;
     if (!Security(2, pMyDisasm)) return;
+    toggle = ((*pMyDisasm).Prefix.AddressSize != InUsePrefix);
     (*pMyDisasm).Prefix.AddressSize = InUsePrefix;
     if (GV.VEX.state == InUsePrefix) {
       GV.ERROR_OPCODE = UD_;
@@ -276,22 +293,25 @@ void __bea_callspec__ PrefAdSize(PDISASM pMyDisasm)
     GV.EIP_++;
     (*pMyDisasm).Prefix.Number++;
     GV.NB_PREFIX++;
-    if (GV.Architecture == 16) {
-        GV.AddressSize = GV.AddressSize << 1;
-    }
-    else {
-        GV.AddressSize = GV.AddressSize >> 1;
+    if (toggle) {
+        if (GV.Architecture == 16) {
+            GV.AddressSize = GV.AddressSize << 1;
+        }
+        else {
+            GV.AddressSize = GV.AddressSize >> 1;
+        }
     }
 
     (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
     (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
-    if (GV.Architecture == 16) {
-        GV.AddressSize = GV.AddressSize >> 1;
+    if (toggle) {
+        if (GV.Architecture == 16) {
+            GV.AddressSize = GV.AddressSize >> 1;
+        }
+        else {
+            GV.AddressSize = GV.AddressSize << 1;
+        }
     }
-    else {
-        GV.AddressSize = GV.AddressSize << 1;
-    }
-
 }
 
 /* ====================================================================

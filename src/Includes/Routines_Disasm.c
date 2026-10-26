@@ -36,6 +36,8 @@ int __bea_callspec__ Disasm (PDISASM pMyDisasm)
         FixREXPrefixes(pMyDisasm);
         FillSegmentsRegisters(pMyDisasm);
         CompleteInstructionFields(pMyDisasm);
+        /* CompleteInstructionFields can still raise UD_ (invalid lock) */
+        (*pMyDisasm).Error = GV.ERROR_OPCODE;
         #ifndef BEA_LIGHT_DISASSEMBLY
         BuildCompleteInstruction(pMyDisasm);
         #endif
@@ -85,14 +87,40 @@ void __bea_callspec__ FailDecode(PDISASM pMyDisasm)
   (*pMyDisasm).Operand4.AccessMode = 0;
   GV.ERROR_OPCODE = UNKNOWN_OPCODE;
 }
+/* ====================================================================
+ * A REX prefix only counts when it immediately precedes the opcode :
+ * every legacy prefix cancels a previous REX
+ * ==================================================================== */
 void __bea_callspec__ ResetREX(PDISASM pMyDisasm)
 {
-  if ((GV.REX.state == InUsePrefix) && (GV.REX.W_ == 1)) GV.OperandSize = GV.OriginalOperandSize;
   GV.REX.W_ = 0;
   GV.REX.R_ = 0;
   GV.REX.X_ = 0;
   GV.REX.B_ = 0;
   GV.REX.state = 0;
+  SetOperandSizeFromPrefixes(pMyDisasm);
+}
+
+/* ====================================================================
+ * OperandSize from REX.W and 66h ; OriginalOperandSize is the size without
+ * 66h (used when 66h is a mandatory prefix)
+ * ==================================================================== */
+void __bea_callspec__ SetOperandSizeFromPrefixes(PDISASM pMyDisasm)
+{
+  Int32 default_size = (GV.Architecture == 16) ? 16 : 32;
+  if ((GV.REX.state == InUsePrefix) && (GV.REX.W_ == 1)) {
+    GV.OperandSize = 64;
+    GV.OriginalOperandSize = 64;
+  }
+  else {
+    GV.OriginalOperandSize = default_size;
+    if ((*pMyDisasm).Prefix.OperandSize == InUsePrefix) {
+      GV.OperandSize = (default_size == 16) ? 32 : 16;
+    }
+    else {
+      GV.OperandSize = default_size;
+    }
+  }
 }
 
 /* ====================================================================

@@ -2018,10 +2018,10 @@ void __bea_callspec__ dec_eax(PDISASM pMyDisasm)
         GV.REX.X_ = 0;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2043,10 +2043,10 @@ void __bea_callspec__ dec_ecx(PDISASM pMyDisasm)
         GV.REX.X_ = 0;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2069,10 +2069,10 @@ void __bea_callspec__ dec_edx(PDISASM pMyDisasm)
         GV.REX.X_ = 1;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2095,10 +2095,10 @@ void __bea_callspec__ dec_ebx(PDISASM pMyDisasm)
         GV.REX.X_ = 1;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2121,10 +2121,10 @@ void __bea_callspec__ dec_esp(PDISASM pMyDisasm)
         GV.REX.X_ = 0;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2147,10 +2147,10 @@ void __bea_callspec__ dec_ebp(PDISASM pMyDisasm)
         GV.REX.X_ = 0;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2173,10 +2173,10 @@ void __bea_callspec__ dec_esi(PDISASM pMyDisasm)
         GV.REX.X_ = 1;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2199,10 +2199,10 @@ void __bea_callspec__ dec_edi(PDISASM pMyDisasm)
         GV.REX.X_ = 1;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
-        GV.OperandSize = 64;
         (*pMyDisasm).Instruction.Opcode = *((UInt8*) (UIntPtr)GV.EIP_);
         (void) opcode_map1[*((UInt8*) (UIntPtr)GV.EIP_)](pMyDisasm);
         GV.OperandSize = 32;
@@ -2287,12 +2287,12 @@ void __bea_callspec__ inc_eax(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 0;
         GV.REX.X_ = 0;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
@@ -2341,12 +2341,12 @@ void __bea_callspec__ inc_ecx(PDISASM pMyDisasm)
 {
   if (GV.Architecture == 64) {
     if (!Security(2, pMyDisasm)) return;
-    if (GV.REX.W_ == 1) GV.OperandSize = 32;
     GV.REX.W_ = 0;
     GV.REX.R_ = 0;
     GV.REX.X_ = 0;
     GV.REX.B_ = 1;
     GV.REX.state = InUsePrefix;
+    SetOperandSizeFromPrefixes(pMyDisasm);
     GV.EIP_++;
     GV.NB_PREFIX++;
     (*pMyDisasm).Prefix.Number++;
@@ -2395,12 +2395,12 @@ void __bea_callspec__ inc_edx(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 0;
         GV.REX.X_ = 1;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
@@ -2450,12 +2450,12 @@ void __bea_callspec__ inc_ebx(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 0;
         GV.REX.X_ = 1;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
@@ -2505,12 +2505,12 @@ void __bea_callspec__ inc_esp(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 1;
         GV.REX.X_ = 0;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
@@ -2560,12 +2560,12 @@ void __bea_callspec__ inc_ebp(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 1;
         GV.REX.X_ = 0;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
@@ -2615,12 +2615,12 @@ void __bea_callspec__ inc_esi(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 1;
         GV.REX.X_ = 1;
         GV.REX.B_ = 0;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
@@ -2670,12 +2670,12 @@ void __bea_callspec__ inc_edi(PDISASM pMyDisasm)
 {
     if (GV.Architecture == 64) {
         if (!Security(2, pMyDisasm)) return;
-        if (GV.REX.W_ == 1) GV.OperandSize = 32;
         GV.REX.W_ = 0;
         GV.REX.R_ = 1;
         GV.REX.X_ = 1;
         GV.REX.B_ = 1;
         GV.REX.state = InUsePrefix;
+        SetOperandSizeFromPrefixes(pMyDisasm);
         GV.EIP_++;
         GV.NB_PREFIX++;
         (*pMyDisasm).Prefix.Number++;
