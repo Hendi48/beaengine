@@ -26644,6 +26644,7 @@ void __bea_callspec__ D8_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand2.Registers.type = FPU_REG;
   (*pMyDisasm).Operand2.Registers.fpu = REGS[(MyMODRM & 0xf)%8];
             (*pMyDisasm).Operand2.OpSize = 80;
+            (*pMyDisasm).Operand1.AccessMode = READ;
         }
         else if ((MyMODRM & 0xf0) == 0xe0) {
             if (((MyMODRM & 0xf) >=0) && ((MyMODRM & 0xf) <=7)) {
@@ -27285,7 +27286,6 @@ void __bea_callspec__ DA_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fcmove ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand1.OpMnemonic, (*pRegistersFPU)[0]);
@@ -27314,7 +27314,6 @@ void __bea_callspec__ DA_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fcmovu ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand1.OpMnemonic, (*pRegistersFPU)[0]);
@@ -27458,7 +27457,6 @@ void __bea_callspec__ DB_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fcmovne ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand1.OpMnemonic, (*pRegistersFPU)[0]);
@@ -27487,7 +27485,6 @@ void __bea_callspec__ DB_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fcmovnu ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand1.OpMnemonic, (*pRegistersFPU)[0]);
@@ -27772,6 +27769,7 @@ void __bea_callspec__ DC_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand1.Registers.type = FPU_REG;
   (*pMyDisasm).Operand1.Registers.fpu = REGS[(MyMODRM & 0xf)%8];
             (*pMyDisasm).Operand1.OpSize = 80;
+            (*pMyDisasm).Operand1.AccessMode = READ;
 
         }
         else if ((MyMODRM & 0xf0) == 0xe0) {
@@ -27997,19 +27995,20 @@ void __bea_callspec__ DD_(PDISASM pMyDisasm)
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fucom ");
                 #endif
                 #ifndef BEA_LIGHT_DISASSEMBLY
-                   (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[0]);
-                #endif
-                (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;
-  (*pMyDisasm).Operand2.Registers.type = FPU_REG;
-  (*pMyDisasm).Operand2.Registers.fpu = REGS[0];
-                (*pMyDisasm).Operand2.OpSize = 80;
-                #ifndef BEA_LIGHT_DISASSEMBLY
-                   (void) strcpy ((*pMyDisasm).Operand1.OpMnemonic, (*pRegistersFPU)[(MyMODRM & 0xf)%8]);
+                   (void) strcpy ((*pMyDisasm).Operand1.OpMnemonic, (*pRegistersFPU)[0]);
                 #endif
                 (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;
   (*pMyDisasm).Operand1.Registers.type = FPU_REG;
-  (*pMyDisasm).Operand1.Registers.fpu = REGS[(MyMODRM & 0xf)%8];
+  (*pMyDisasm).Operand1.Registers.fpu = REGS[0];
                 (*pMyDisasm).Operand1.OpSize = 80;
+                #ifndef BEA_LIGHT_DISASSEMBLY
+                   (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[(MyMODRM & 0xf)%8]);
+                #endif
+                (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;
+  (*pMyDisasm).Operand2.Registers.type = FPU_REG;
+  (*pMyDisasm).Operand2.Registers.fpu = REGS[(MyMODRM & 0xf)%8];
+                (*pMyDisasm).Operand2.OpSize = 80;
+                (*pMyDisasm).Operand1.AccessMode = READ;
             }
             else {
                 (*pMyDisasm).Instruction.Category = FPU_INSTRUCTION+COMPARISON_INSTRUCTION;
@@ -28023,6 +28022,7 @@ void __bea_callspec__ DD_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand1.Registers.type = FPU_REG;
   (*pMyDisasm).Operand1.Registers.fpu = REGS[(MyMODRM & 0xf)%8];
                 (*pMyDisasm).Operand1.OpSize = 80;
+                (*pMyDisasm).Operand1.AccessMode = READ;
             }
 
         }
@@ -28166,7 +28166,6 @@ void __bea_callspec__ DE_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fmulp ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[0]);
@@ -28196,6 +28195,7 @@ void __bea_callspec__ DE_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand1.Registers.type = FPU_REG;
   (*pMyDisasm).Operand1.Registers.fpu = REGS[(MyMODRM & 0xf)%8];
                 (*pMyDisasm).Operand1.OpSize = 80;
+                (*pMyDisasm).Operand1.AccessMode = READ;
             }
             else if (MyMODRM == 0xd9){
                 (*pMyDisasm).Instruction.Category = FPU_INSTRUCTION+COMPARISON_INSTRUCTION;
@@ -28221,7 +28221,6 @@ void __bea_callspec__ DE_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fsubp ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[0]);
@@ -28250,7 +28249,6 @@ void __bea_callspec__ DE_(PDISASM pMyDisasm)
                 #ifndef BEA_LIGHT_DISASSEMBLY
                    (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "fdivp ");
                 #endif
-                (*pMyDisasm).Operand2.AccessMode = WRITE;
             }
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[0]);
@@ -28342,7 +28340,7 @@ void __bea_callspec__ DF_(PDISASM pMyDisasm)
           (*pMyDisasm).Operand2.OpSize = 80;
       }
       else if (GV.REGOPCODE == 4) {
-          GV.MemDecoration = Arg2multibytes;
+          GV.MemDecoration = Arg2tbyte;
           MOD_RM(&(*pMyDisasm).Operand2, pMyDisasm);
           (*pMyDisasm).Instruction.Category = FPU_INSTRUCTION+DATA_TRANSFER;
           #ifndef BEA_LIGHT_DISASSEMBLY
@@ -28366,7 +28364,7 @@ void __bea_callspec__ DF_(PDISASM pMyDisasm)
           (*pMyDisasm).Operand1.OpSize = 80;
       }
       else if (GV.REGOPCODE == 6) {
-          GV.MemDecoration = Arg1multibytes;
+          GV.MemDecoration = Arg1tbyte;
           MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
           (*pMyDisasm).Instruction.Category = FPU_INSTRUCTION+DATA_TRANSFER;
           #ifndef BEA_LIGHT_DISASSEMBLY
@@ -28458,6 +28456,7 @@ void __bea_callspec__ DF_(PDISASM pMyDisasm)
           (*pMyDisasm).Operand1.Registers.type = FPU_REG;
           (*pMyDisasm).Operand1.Registers.fpu = REGS[0];
           (*pMyDisasm).Operand1.OpSize = 80;
+          (*pMyDisasm).Operand1.AccessMode = READ;
           #ifndef BEA_LIGHT_DISASSEMBLY
              (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[(MyMODRM & 0xf)%8]);
           #endif
@@ -28484,6 +28483,7 @@ void __bea_callspec__ DF_(PDISASM pMyDisasm)
           (*pMyDisasm).Operand1.Registers.type = FPU_REG;
           (*pMyDisasm).Operand1.Registers.fpu = REGS[0];
           (*pMyDisasm).Operand1.OpSize = 80;
+          (*pMyDisasm).Operand1.AccessMode = READ;
           #ifndef BEA_LIGHT_DISASSEMBLY
              (void) strcpy ((*pMyDisasm).Operand2.OpMnemonic, (*pRegistersFPU)[(MyMODRM & 0xf)%8]);
           #endif
