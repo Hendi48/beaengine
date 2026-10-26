@@ -358,9 +358,10 @@ void __bea_callspec__ Addr_EBX(OPTYPE* pMyOperand, PDISASM pMyDisasm)
 void __bea_callspec__ Addr_SIB(OPTYPE* pMyOperand, PDISASM pMyDisasm)
 {
   size_t i;
-  if (!Security(3, pMyDisasm)) return;
   (*pMyOperand).OpType = MEMORY_TYPE;
   if (GV.AddressSize >= 32) {
+    /* the SIB byte is only present with 32/64-bit addressing */
+    if (!Security(3, pMyDisasm)) return;
     GV.DECALAGE_EIP++;
     GV.BASE_  = ((UInt8) *((UInt8*) (UIntPtr) (GV.EIP_+2))) & 0x7;
     GV.SCALE_  = (((UInt8) *((UInt8*) (UIntPtr)(GV.EIP_+2))) & 0xc0) >> 6;

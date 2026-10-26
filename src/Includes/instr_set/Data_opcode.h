@@ -62,7 +62,7 @@ void (__bea_callspec__ *opcode_map2[])(PDISASM) = {
     jo_near   , jno_near  , jc_near   , jnc_near  , je_near   , jne_near  , jbe_near  , ja_near   , js_near   , jns_near  , jp_near   , jnp_near  , jl_near   , jnl_near  , jle_near  , jnle_near ,
     seto_     , setno_    , setb_     , setnb_    , sete_     , setne_    , setbe_    , setnbe_   , sets_     , setns_    , setp_     , setnp_    , setnge_   , setge_    , setle_    , setnle_   ,
     push_fs   , pop_fs    , cpuid_    , bt_EvGv   ,shld_EvGvIb,shld_EvGvCL, FailDecode, FailDecode, push_gs   , pop_gs    , rsm_      , bts_EvGv  ,shrd_EvGvIb,shrd_EvGvCL, G15_      , imul_GvEv ,
-    cmpx_EbGb , cmpx_EvGv , lss_Mp    , btr_EvGv  , lfs_Mp    , lgs_Mp    , movzx_GvEb, movzx_GvEw, popcnt_   , ud2_      , G8_EvIb   , btc_EvGv  , bsf_GvEv  , bsr_GvEv  , movsx_GvEb, movsx_GvEw,
+    cmpx_EbGb , cmpx_EvGv , lss_Mp    , btr_EvGv  , lfs_Mp    , lgs_Mp    , movzx_GvEb, movzx_GvEw, popcnt_   , ud1_      , G8_EvIb   , btc_EvGv  , bsf_GvEv  , bsr_GvEv  , movsx_GvEb, movsx_GvEw,
     xadd_EbGb , xadd_EvGv , cmpps_VW  , movnti_   , pinsrw_   , pextrw_   , shufps_   , G9_       , bswap_eax , bswap_ecx , bswap_edx , bswap_ebx , bswap_esp , bswap_ebp , bswap_esi , bswap_edi ,
     addsubpd_ , psrlw_    , psrld_    , psrlq_    , paddq_    , pmullw_   , movq_WV   , pmovmskb_ , psubusb_  , psubusw_  , pminub_   , pand_     , paddusb_  , paddusw_  , pmaxub_   , pandn_    ,
     pavgb_    , psraw_    , psrad_    , pavgw_    , pmulhuw_  , pmulhw_   , cvtpd2dq_ , movntq_   , psubsb_   , psubsw_   , pminsw_   , por_      , paddsb_   , paddsw_   , pmaxsw_   , pxor_     ,

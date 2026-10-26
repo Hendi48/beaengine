@@ -1245,7 +1245,7 @@ void __bea_callspec__ call_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "call ");
     #endif
     if (GV.OperandSize >= 32) {
-        if (!Security(6, pMyDisasm)) return;
+        if (!Security(5, pMyDisasm)) return;
         (*pMyDisasm).Operand1.OpSize = 32;
         MyNumber = *((Int32*)(UIntPtr) (GV.EIP_+1))+5+GV.NB_PREFIX;
         CalculateRelativeAddress(&MyAddress,(Int64) MyNumber, pMyDisasm);
@@ -1266,9 +1266,9 @@ void __bea_callspec__ call_(PDISASM pMyDisasm)
         GV.EIP_+=5;
     }
     else {
-        if (!Security(4, pMyDisasm)) return;
+        if (!Security(3, pMyDisasm)) return;
         (*pMyDisasm).Operand1.OpSize = 32;
-        MyNumber = *((Int32*)(UIntPtr) (GV.EIP_+1))+3+GV.NB_PREFIX;
+        MyNumber = *((Int16*)(UIntPtr) (GV.EIP_+1))+3+GV.NB_PREFIX;
         CalculateRelativeAddress(&MyAddress,(Int64) MyNumber, pMyDisasm);
         MyAddress = MyAddress & 0xffff;
         (*pMyDisasm).Instruction.AddrValue = MyAddress;
@@ -1311,14 +1311,14 @@ void __bea_callspec__ callf_(PDISASM pMyDisasm)
             #endif
         }
         if (GV.OperandSize ==32) {
-            if (!Security(8, pMyDisasm)) return;
+            if (!Security(7, pMyDisasm)) return;
             MyNumber = *((UInt16*)(UIntPtr) (GV.EIP_+5));
             #ifndef BEA_LIGHT_DISASSEMBLY
                i += CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand1.OpMnemonic+i, "%.4X",(Int64) MyNumber);
             #endif
         }
         else {
-            if (!Security(6, pMyDisasm)) return;
+            if (!Security(5, pMyDisasm)) return;
             MyNumber = *((UInt16*)(UIntPtr) (GV.EIP_+3));
             #ifndef BEA_LIGHT_DISASSEMBLY
                i += CopyFormattedNumber(pMyDisasm, (char*) &(*pMyDisasm).Operand1.OpMnemonic+i, "%.4X",(Int64) MyNumber);
@@ -3085,7 +3085,7 @@ void __bea_callspec__ imul_GvEvIb(PDISASM pMyDisasm)
         Reg_Opcode(&(*pMyDisasm).Operand1, pMyDisasm);
 
         GV.EIP_+= GV.DECALAGE_EIP+2;
-        if (!Security(2, pMyDisasm)) return;
+        if (!Security(1, pMyDisasm)) return;
         (*pMyDisasm).Instruction.Immediat = *((UInt8*)(UIntPtr) (GV.EIP_- 0));
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) CopyFormattedNumber(pMyDisasm, (char*) (*pMyDisasm).Operand3.OpMnemonic, "%.2X",(Int64) *((UInt8*)(UIntPtr) (GV.EIP_- 0)));
@@ -9293,6 +9293,23 @@ void __bea_callspec__ ud2_(PDISASM pMyDisasm)
      (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "ud2 ");
   #endif
   GV.EIP_++;
+}
+
+/* ====================================================================
+ *      0x 0f b9 : ud1 Gv, Ev (has a ModRM byte, unlike ud2)
+ * ==================================================================== */
+void __bea_callspec__ ud1_(PDISASM pMyDisasm)
+{
+  if (GV.VEX.state == InUsePrefix) {
+    FailDecode(pMyDisasm);
+    return;
+  }
+  (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+MISCELLANEOUS_INSTRUCTION;
+  #ifndef BEA_LIGHT_DISASSEMBLY
+     (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "ud1 ");
+  #endif
+  GvEv(pMyDisasm);
+  (*pMyDisasm).Operand1.AccessMode = READ;
 }
 
 /* =======================================

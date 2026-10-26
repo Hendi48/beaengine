@@ -671,6 +671,7 @@ void __bea_callspec__ test_EvGv(PDISASM);
 void __bea_callspec__ test_GbEb(PDISASM);
 void __bea_callspec__ test_GvEv(PDISASM);
 void __bea_callspec__ ud2_(PDISASM);
+void __bea_callspec__ ud1_(PDISASM);
 void __bea_callspec__ ucomiss_VW(PDISASM);
 void __bea_callspec__ unpckhps_(PDISASM);
 void __bea_callspec__ unpcklps_(PDISASM);
