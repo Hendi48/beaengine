@@ -9457,7 +9457,7 @@ void __bea_callspec__ xadd_EbGb(PDISASM pMyDisasm)
   #endif
   EbGb(pMyDisasm);
   if ((*pMyDisasm).Prefix.LockPrefix == InUsePrefix) {
-    if ((*pMyDisasm).Operand1.OpType != MEMORY_TYPE) {
+    if (!IS_MEMORY_TYPE((*pMyDisasm).Operand1.OpType)) {
       GV.ERROR_OPCODE = UD_;
     }
   }
@@ -9485,7 +9485,7 @@ void __bea_callspec__ xadd_EvGv(PDISASM pMyDisasm)
   #endif
   EvGv(pMyDisasm);
   if ((*pMyDisasm).Prefix.LockPrefix == InUsePrefix) {
-    if ((*pMyDisasm).Operand1.OpType != MEMORY_TYPE) {
+    if (!IS_MEMORY_TYPE((*pMyDisasm).Operand1.OpType)) {
       GV.ERROR_OPCODE = UD_;
     }
   }

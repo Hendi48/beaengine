@@ -20,6 +20,9 @@
 
 #define GV (*pMyDisasm).Reserved_
 
+/* a memory OpType may carry flags like RELATIVE_ (rip-relative), so compare the kind only */
+#define IS_MEMORY_TYPE(type) (((type) & 0xF0000) == MEMORY_TYPE)
+
 /* Define constants to identify the position and type of decoration used in case of memory argument */
 
 

@@ -969,7 +969,7 @@ void __bea_callspec__ FillSegmentsRegisters(PDISASM pMyDisasm)
 {
   if (
       ((*pMyDisasm).Prefix.LockPrefix == InUsePrefix) &&
-      ((*pMyDisasm).Operand1.OpType != MEMORY_TYPE) &&
+      (!IS_MEMORY_TYPE((*pMyDisasm).Operand1.OpType)) &&
       ((*pMyDisasm).Operand1.OpType != REGISTER_TYPE)
     ) {
       (*pMyDisasm).Prefix.LockPrefix = InvalidPrefix;
@@ -978,7 +978,7 @@ void __bea_callspec__ FillSegmentsRegisters(PDISASM pMyDisasm)
     (*pMyDisasm).Operand1.SegmentReg = ESReg;
     (*pMyDisasm).Operand2.SegmentReg = DSReg;
     /* =============== override affects Arg2 */
-    if ((*pMyDisasm).Operand2.OpType == MEMORY_TYPE) {
+    if (IS_MEMORY_TYPE((*pMyDisasm).Operand2.OpType)) {
       if ((*pMyDisasm).Prefix.FSPrefix == InUsePrefix) {
         (*pMyDisasm).Operand2.SegmentReg = FSReg;
       }
@@ -1000,14 +1000,14 @@ void __bea_callspec__ FillSegmentsRegisters(PDISASM pMyDisasm)
     }
   }
   else {
-    if ((*pMyDisasm).Operand1.OpType == MEMORY_TYPE) {
+    if (IS_MEMORY_TYPE((*pMyDisasm).Operand1.OpType)) {
       if (
           ((*pMyDisasm).Operand1.Memory.BaseRegister == REG4) ||
           ((*pMyDisasm).Operand1.Memory.BaseRegister == REG5)
         ) {
         (*pMyDisasm).Operand1.SegmentReg = SSReg;
         /* ========== override is invalid here */
-        if ((*pMyDisasm).Operand2.OpType != MEMORY_TYPE) {
+        if (!IS_MEMORY_TYPE((*pMyDisasm).Operand2.OpType)) {
           if ((*pMyDisasm).Prefix.FSPrefix == InUsePrefix) {
             (*pMyDisasm).Operand1.SegmentReg = FSReg;
             (*pMyDisasm).Prefix.FSPrefix = InvalidPrefix;
@@ -1055,7 +1055,7 @@ void __bea_callspec__ FillSegmentsRegisters(PDISASM pMyDisasm)
       }
     }
 
-    if ((*pMyDisasm).Operand2.OpType == MEMORY_TYPE) {
+    if (IS_MEMORY_TYPE((*pMyDisasm).Operand2.OpType)) {
       if (
         ((*pMyDisasm).Operand2.Memory.BaseRegister == REG4) ||
          ((*pMyDisasm).Operand2.Memory.BaseRegister == REG5)
