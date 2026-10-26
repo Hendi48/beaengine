@@ -1451,7 +1451,7 @@ void __bea_callspec__ BuildCompleteInstructionATSyntax(PDISASM pMyDisasm)
     }
 
     /* =============== if Arg3.Exists, display it */
-    if ((*pMyDisasm).Operand3.OpMnemonic != 0) {
+    if (*((UInt8*) &(*pMyDisasm).Operand3.OpMnemonic) != 0) {
       if ((*pMyDisasm).Operand3.OpType == REGISTER_TYPE) {
         (void) strcpy ((char*) &(*pMyDisasm).CompleteInstr+i, "%");
         i++;

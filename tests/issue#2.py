@@ -28,7 +28,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0x8f)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pop ')
-        assert_equal(myDisasm.repr(), 'pop qword ptr [rsp+09h]')
+        assert_equal(myDisasm.repr(), 'pop qword ptr [rsp+01h]')
 
         Buffer = bytes.fromhex('8f442401')
         myDisasm = Disasm(Buffer)
@@ -36,7 +36,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0x8f)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pop ')
-        assert_equal(myDisasm.repr(), 'pop dword ptr [esp+05h]')
+        assert_equal(myDisasm.repr(), 'pop dword ptr [esp+01h]')
 
         Buffer = bytes.fromhex('8f4301')
         myDisasm = Disasm(Buffer)
@@ -53,7 +53,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0x8f)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pop ')
-        assert_equal(myDisasm.repr(), 'pop qword ptr [rsp+08h]')
+        assert_equal(myDisasm.repr(), 'pop qword ptr [rsp+00h]')
 
         Buffer = bytes.fromhex('8f042400')
         myDisasm = Disasm(Buffer)
@@ -61,7 +61,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0x8f)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pop ')
-        assert_equal(myDisasm.repr(), 'pop dword ptr [esp+04h]')
+        assert_equal(myDisasm.repr(), 'pop dword ptr [esp+00h]')
 
 
         Buffer = bytes.fromhex('8f03')
@@ -78,7 +78,7 @@ class TestSuite:
         myDisasm.read()
         assert_equal(myDisasm.infos.Instruction.Opcode, 0x8f)
         assert_equal(myDisasm.infos.Instruction.Mnemonic, b'pop ')
-        assert_equal(myDisasm.repr(), 'pop qword ptr [rsp+00000009h]')
+        assert_equal(myDisasm.repr(), 'pop qword ptr [rsp+00000001h]')
 
         Buffer = bytes.fromhex('8f8301000000')
         myDisasm = Disasm(Buffer)
