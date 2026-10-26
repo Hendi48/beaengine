@@ -967,6 +967,24 @@ void __bea_callspec__ FillFlags(PDISASM pMyDisasm, int index)
   (*pMyDisasm).Instruction.Flags = EFLAGS_TABLE[index];
 }
 /* ====================================================================
+ * shift/rotate by an immediate count: a masked count of 0 affects no flag,
+ * OF is only defined for a count of 1
+ * ==================================================================== */
+void __bea_callspec__ FillFlagsShiftImm(PDISASM pMyDisasm, int indexOne, int indexMany)
+{
+  Int64 count;
+  count = (*pMyDisasm).Instruction.Immediat & ((GV.OperandSize == 64) ? 0x3F : 0x1F);
+  if (count == 0) {
+    FillFlags(pMyDisasm, 72);
+  }
+  else if (count == 1) {
+    FillFlags(pMyDisasm, indexOne);
+  }
+  else {
+    FillFlags(pMyDisasm, indexMany);
+  }
+}
+/* ====================================================================
  *
  * ==================================================================== */
 void __bea_callspec__ CalculateRelativeAddress(UInt64 * pMyAddress, Int64 MyNumber, PDISASM pMyDisasm)

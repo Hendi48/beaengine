@@ -35,6 +35,7 @@ void __bea_callspec__ aaa_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
   (*pMyDisasm).Operand1.Registers.gpr = REG0;
   (*pMyDisasm).Operand1.OpSize = 8;
+  FillFlags(pMyDisasm, 0);
   GV.EIP_++;
 }
 
@@ -84,6 +85,7 @@ void __bea_callspec__ aad_(PDISASM pMyDisasm)
     (*pMyDisasm).Operand2.OpType = CONSTANT_TYPE+ABSOLUTE_;
     (*pMyDisasm).Operand2.OpSize = 8;
   }
+  FillFlags(pMyDisasm, 1);
   GV.EIP_+=2;
 }
 
@@ -118,6 +120,7 @@ void __bea_callspec__ aam_(PDISASM pMyDisasm)
     (*pMyDisasm).Operand2.OpType = CONSTANT_TYPE+ABSOLUTE_;
     (*pMyDisasm).Operand2.OpSize = 8;
   }
+  FillFlags(pMyDisasm, 2);
   GV.EIP_+=2;
 }
 
@@ -139,6 +142,7 @@ void __bea_callspec__ aas_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
   (*pMyDisasm).Operand1.Registers.gpr = REG0;
   (*pMyDisasm).Operand1.OpSize = 8;
+  FillFlags(pMyDisasm, 3);
   GV.EIP_++;
 }
 
@@ -1461,7 +1465,7 @@ void __bea_callspec__ cmovo_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovo ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 116);
   }
   else {
     FailDecode(pMyDisasm);
@@ -1508,7 +1512,7 @@ void __bea_callspec__ cmovnb_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovnb ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 117);
   }
   else {
     FailDecode(pMyDisasm);
@@ -1527,7 +1531,7 @@ void __bea_callspec__ cmovns_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovns ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 120);
   }
   else {
     FailDecode(pMyDisasm);
@@ -1546,7 +1550,7 @@ void __bea_callspec__ cmovl_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovl ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 122);
   }
   else {
     FailDecode(pMyDisasm);
@@ -1564,7 +1568,7 @@ void __bea_callspec__ cmovnl_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovnl ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 122);
   }
   else {
     FailDecode(pMyDisasm);
@@ -1582,7 +1586,7 @@ void __bea_callspec__ cmovle_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovle ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 115);
   }
   else {
     FailDecode(pMyDisasm);
@@ -1600,7 +1604,7 @@ void __bea_callspec__ cmovnle_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovnle ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 115);
   }
   else {
     FailDecode(pMyDisasm);
@@ -3201,7 +3205,7 @@ void __bea_callspec__ je_(PDISASM pMyDisasm)
  * ======================================= */
 void __bea_callspec__ jne_(PDISASM pMyDisasm)
 {
-  jcc_short(pMyDisasm, "jne ", 49, JNE);
+  jcc_short(pMyDisasm, "jne ", 118, JNE);
 }
 
 /* =======================================
@@ -3399,7 +3403,7 @@ void __bea_callspec__ jne_near(PDISASM pMyDisasm)
  * ======================================= */
 void __bea_callspec__ jbe_near(PDISASM pMyDisasm)
 {
-  jcc_near(pMyDisasm, "jbe ", 49, JNA);
+  jcc_near(pMyDisasm, "jbe ", 119, JNA);
 }
 
 
@@ -3526,7 +3530,7 @@ void __bea_callspec__ jecxz_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand1.AccessMode = READ;
         (*pMyDisasm).Instruction.AddrValue = MyAddress;
         GV.EIP_+=2;
-        FillFlags(pMyDisasm,49);
+        FillFlags(pMyDisasm,50);
     }
     else {
         if (!Security(2, pMyDisasm)) return;
@@ -3540,7 +3544,7 @@ void __bea_callspec__ jecxz_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand1.AccessMode = READ;
         (*pMyDisasm).Instruction.AddrValue = MyAddress;
         GV.EIP_+=2;
-        FillFlags(pMyDisasm,49);
+        FillFlags(pMyDisasm,50);
     }
 }
 
@@ -3627,7 +3631,7 @@ void __bea_callspec__ jmp_short(PDISASM pMyDisasm)
     (*pMyDisasm).Operand1.AccessMode = READ;
     (*pMyDisasm).Instruction.AddrValue = MyAddress;
     GV.EIP_+=2;
-    FillFlags(pMyDisasm,49);
+    FillFlags(pMyDisasm,51);
 }
 
 
@@ -3722,6 +3726,7 @@ void __bea_callspec__ lahf_(PDISASM pMyDisasm)
   (*pMyDisasm).Operand2.Registers.type = SPECIAL_REG;
   (*pMyDisasm).Operand2.Registers.special = REG0;
     (*pMyDisasm).Operand2.OpSize = 8;
+    FillFlags(pMyDisasm, 52);
     GV.EIP_++;
 }
 
@@ -5643,7 +5648,7 @@ void __bea_callspec__ cmovno_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovno ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 116);
   }
   else {
     FailDecode(pMyDisasm);
@@ -5720,7 +5725,7 @@ void __bea_callspec__ cmovb_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovb ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 117);
   }
   else {
     FailDecode(pMyDisasm);
@@ -5792,7 +5797,7 @@ void __bea_callspec__ cmovne_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovne ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 118);
   }
   else {
     FailDecode(pMyDisasm);
@@ -5868,7 +5873,7 @@ void __bea_callspec__ cmovbe_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovbe ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 119);
   }
   else {
     FailDecode(pMyDisasm);
@@ -5943,7 +5948,7 @@ void __bea_callspec__ cmovnbe_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovnbe ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 119);
   }
   else {
     FailDecode(pMyDisasm);
@@ -5962,7 +5967,7 @@ void __bea_callspec__ cmovs_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovs ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 120);
   }
   else {
     FailDecode(pMyDisasm);
@@ -6037,7 +6042,7 @@ void __bea_callspec__ cmovp_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovp ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 121);
   }
   else {
     FailDecode(pMyDisasm);
@@ -6105,7 +6110,7 @@ void __bea_callspec__ cmovnp_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmovnp ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 121);
   }
   else {
     FailDecode(pMyDisasm);
@@ -6182,7 +6187,7 @@ void __bea_callspec__ cmove_(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "cmove ");
     #endif
     GvEv(pMyDisasm);
-    FillFlags(pMyDisasm, 19);
+    FillFlags(pMyDisasm, 118);
   }
   else {
     FailDecode(pMyDisasm);
@@ -7567,7 +7572,7 @@ void __bea_callspec__ pushfd_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand1.OpSize = 64;
         (*pMyDisasm).Operand1.Memory.BaseRegister = REG4;
         (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
-        FillFlags(pMyDisasm, 78);
+        FillFlags(pMyDisasm, 132);
     }
     else if (GV.OperandSize == 32) {
         #ifndef BEA_LIGHT_DISASSEMBLY
@@ -7582,7 +7587,7 @@ void __bea_callspec__ pushfd_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand1.OpSize = 32;
         (*pMyDisasm).Operand1.Memory.BaseRegister = REG4;
         (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
-        FillFlags(pMyDisasm, 78);
+        FillFlags(pMyDisasm, 132);
     }
     else {
         #ifndef BEA_LIGHT_DISASSEMBLY
@@ -7597,7 +7602,7 @@ void __bea_callspec__ pushfd_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand1.OpSize = 16;
         (*pMyDisasm).Operand1.Memory.BaseRegister = REG4;
         (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
-        FillFlags(pMyDisasm, 78);
+        FillFlags(pMyDisasm, 132);
     }
 }
 
@@ -7874,6 +7879,7 @@ void __bea_callspec__ sahf_(PDISASM pMyDisasm)
   #ifndef BEA_LIGHT_DISASSEMBLY
      (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sahf ");
   #endif
+  FillFlags(pMyDisasm, 90);
   GV.EIP_++;
   (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;
   (*pMyDisasm).Operand1.Registers.type = SPECIAL_REG;
@@ -7894,6 +7900,7 @@ void __bea_callspec__ salc_(PDISASM pMyDisasm)
     #ifndef BEA_LIGHT_DISASSEMBLY
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "salc ");
     #endif
+    FillFlags(pMyDisasm, 117);
     GV.EIP_++;
 }
 
@@ -8325,7 +8332,7 @@ void __bea_callspec__ seto_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 116);
   }
   else {
     FailDecode(pMyDisasm);
@@ -8406,7 +8413,7 @@ void __bea_callspec__ setno_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 116);
   }
   else {
     FailDecode(pMyDisasm);
@@ -8494,7 +8501,7 @@ void __bea_callspec__ setb_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 117);
   }
   else {
     FailDecode(pMyDisasm);
@@ -8583,7 +8590,7 @@ void __bea_callspec__ setnb_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 117);
   }
   else {
     FailDecode(pMyDisasm);
@@ -8609,7 +8616,7 @@ void __bea_callspec__ sete_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 118);
 }
 
 /* =======================================
@@ -8631,7 +8638,7 @@ void __bea_callspec__ setne_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 118);
 }
 
 /* =======================================
@@ -8653,7 +8660,7 @@ void __bea_callspec__ setbe_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 119);
 }
 
 /* =======================================
@@ -8675,7 +8682,7 @@ void __bea_callspec__ setnbe_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 119);
 }
 
 /* =======================================
@@ -8746,7 +8753,7 @@ void __bea_callspec__ sets_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 120);
   }
   else {
     FailDecode(pMyDisasm);
@@ -8825,7 +8832,7 @@ void __bea_callspec__ setns_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 120);
   }
   else {
     FailDecode(pMyDisasm);
@@ -8851,7 +8858,7 @@ void __bea_callspec__ setp_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 121);
 }
 
 /* =======================================
@@ -8873,7 +8880,7 @@ void __bea_callspec__ setnp_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 121);
 }
 
 /* =======================================
@@ -8895,7 +8902,7 @@ void __bea_callspec__ setge_(PDISASM pMyDisasm)
     MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
     GV.OperandSize = 32;
     GV.EIP_+= GV.DECALAGE_EIP+2;
-    FillFlags(pMyDisasm,95);
+    FillFlags(pMyDisasm, 122);
 }
 
 /* =======================================
@@ -8917,7 +8924,7 @@ void __bea_callspec__ setnge_(PDISASM pMyDisasm)
   MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
   GV.OperandSize = 32;
   GV.EIP_+= GV.DECALAGE_EIP+2;
-  FillFlags(pMyDisasm,95);
+  FillFlags(pMyDisasm, 122);
 }
 
 /* =======================================
@@ -8939,7 +8946,7 @@ void __bea_callspec__ setle_(PDISASM pMyDisasm)
   MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
   GV.OperandSize = 32;
   GV.EIP_+= GV.DECALAGE_EIP+2;
-  FillFlags(pMyDisasm,95);
+  FillFlags(pMyDisasm, 115);
 }
 
 /* =======================================
@@ -8961,7 +8968,7 @@ void __bea_callspec__ setnle_(PDISASM pMyDisasm)
   MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
   GV.OperandSize = 32;
   GV.EIP_+= GV.DECALAGE_EIP+2;
-  FillFlags(pMyDisasm,95);
+  FillFlags(pMyDisasm, 115);
 }
 
 
@@ -8991,7 +8998,7 @@ void __bea_callspec__ shld_EvGvIb(PDISASM pMyDisasm)
   (*pMyDisasm).Operand3.OpType = CONSTANT_TYPE+ABSOLUTE_;
   (*pMyDisasm).Operand3.OpSize = 8;
 
-  FillFlags(pMyDisasm, 97);
+  FillFlagsShiftImm(pMyDisasm, 133, 97);
 }
 
 
@@ -9046,7 +9053,7 @@ void __bea_callspec__ shrd_EvGvIb(PDISASM pMyDisasm)
   (*pMyDisasm).Operand3.OpType = CONSTANT_TYPE+ABSOLUTE_;
   (*pMyDisasm).Operand3.OpSize = 8;
 
-  FillFlags(pMyDisasm, 97);
+  FillFlagsShiftImm(pMyDisasm, 133, 97);
 }
 
 
@@ -10282,7 +10289,7 @@ void __bea_callspec__ xchg_EbGb(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "xchg ");
     #endif
     EbGb(pMyDisasm);
-    FillFlags(pMyDisasm,113);
+    FillFlags(pMyDisasm,111);
     (*pMyDisasm).Operand2.AccessMode = WRITE;
 }
 
@@ -10299,7 +10306,7 @@ void __bea_callspec__ xchg_EvGv(PDISASM pMyDisasm)
        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "xchg ");
     #endif
     EvGv(pMyDisasm);
-    FillFlags(pMyDisasm,113);
+    FillFlags(pMyDisasm,111);
     (*pMyDisasm).Operand2.AccessMode = WRITE;
 }
 

@@ -112,6 +112,7 @@ void __bea_callspec__ BuildCompleteInstruction(PDISASM);
 void __bea_callspec__ BuildCompleteInstructionATSyntax(PDISASM);
 int __bea_callspec__ InitVariables (PDISASM);
 void __bea_callspec__ FillFlags(PDISASM, int);
+void __bea_callspec__ FillFlagsShiftImm(PDISASM, int, int);
 void __bea_callspec__ FillSegmentsRegisters (PDISASM);
 void __bea_callspec__ FixOpSizeForMemoryOperand (PDISASM);
 void __bea_callspec__ FixREXPrefixes (PDISASM);

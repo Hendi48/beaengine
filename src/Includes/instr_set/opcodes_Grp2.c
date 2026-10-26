@@ -29,56 +29,58 @@ void __bea_callspec__ G2_EbIb(PDISASM pMyDisasm)
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rol ");
         #endif
-        FillFlags(pMyDisasm, 88);
+        FillFlagsShiftImm(pMyDisasm, 87, 88);
     }
     else if (GV.REGOPCODE == 1) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "ror ");
         #endif
-        FillFlags(pMyDisasm, 88);
+        FillFlagsShiftImm(pMyDisasm, 87, 88);
     }
     else if (GV.REGOPCODE == 2) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rcl ");
         #endif
-        FillFlags(pMyDisasm, 81);
+        /* rcl/rcr r/m8 rotate by count mod 9: no flag is affected when that is 0 */
+        FillFlagsShiftImm(pMyDisasm, 80, (((*pMyDisasm).Instruction.Immediat & 0x1F) % 9) ? 81 : 72);
     }
     else if (GV.REGOPCODE == 3) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rcr ");
         #endif
-        FillFlags(pMyDisasm, 81);
+        /* rcl/rcr r/m8 rotate by count mod 9: no flag is affected when that is 0 */
+        FillFlagsShiftImm(pMyDisasm, 80, (((*pMyDisasm).Instruction.Immediat & 0x1F) % 9) ? 81 : 72);
     }
     else if (GV.REGOPCODE == 4) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "shl ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
     else if (GV.REGOPCODE == 5) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "shr ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
     else if (GV.REGOPCODE == 6) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sal ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
     else if (GV.REGOPCODE == 7) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sar ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
 }
 
@@ -96,56 +98,58 @@ void __bea_callspec__ G2_EvIb(PDISASM pMyDisasm)
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rol ");
         #endif
-        FillFlags(pMyDisasm, 88);
+        FillFlagsShiftImm(pMyDisasm, 87, 88);
     }
     else if (GV.REGOPCODE == 1) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "ror ");
         #endif
-        FillFlags(pMyDisasm, 88);
+        FillFlagsShiftImm(pMyDisasm, 87, 88);
     }
     else if (GV.REGOPCODE == 2) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rcl ");
         #endif
-        FillFlags(pMyDisasm, 81);
+        /* rcl/rcr r/m16 rotate by count mod 17: no flag is affected when that is 0 */
+        FillFlagsShiftImm(pMyDisasm, 80, ((GV.OperandSize == 16) && (((*pMyDisasm).Instruction.Immediat & 0x1F) % 17 == 0)) ? 72 : 81);
     }
     else if (GV.REGOPCODE == 3) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rcr ");
         #endif
-        FillFlags(pMyDisasm, 81);
+        /* rcl/rcr r/m16 rotate by count mod 17: no flag is affected when that is 0 */
+        FillFlagsShiftImm(pMyDisasm, 80, ((GV.OperandSize == 16) && (((*pMyDisasm).Instruction.Immediat & 0x1F) % 17 == 0)) ? 72 : 81);
     }
     else if (GV.REGOPCODE == 4) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "shl ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
     else if (GV.REGOPCODE == 5) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "shr ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
     else if (GV.REGOPCODE == 6) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sal ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
     else if (GV.REGOPCODE == 7) {
         (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+SHIFT_ROTATE;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sar ");
         #endif
-        FillFlags(pMyDisasm, 92);
+        FillFlagsShiftImm(pMyDisasm, 91, 92);
     }
 }
 
