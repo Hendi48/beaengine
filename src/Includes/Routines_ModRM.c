@@ -105,6 +105,8 @@ void __bea_callspec__ fillRegister(int index, OPTYPE* pMyOperand, PDISASM pMyDis
         (*pMyOperand).OpSize = 64;
     }
     else if (GV.Register_ == SEGMENT_REG) {
+        /* REX.R is ignored */
+        index &= 7;
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((char*) (*pMyOperand).OpMnemonic+i, RegistersSEG[index]);
         #endif

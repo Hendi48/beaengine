@@ -37,6 +37,8 @@ void __bea_callspec__ G9_(PDISASM pMyDisasm)
             (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
             (*pMyDisasm).Operand1.Registers.gpr = REG0+REG2;
             (*pMyDisasm).Operand1.OpSize = 128;
+            /* the memory operand is conditionally written */
+            (*pMyDisasm).Operand2.AccessMode = WRITE;
 
             FillFlags(pMyDisasm, 23);
             GV.EIP_ += GV.DECALAGE_EIP+2;
@@ -49,6 +51,8 @@ void __bea_callspec__ G9_(PDISASM pMyDisasm)
             (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
             (*pMyDisasm).Operand1.Registers.gpr = REG0+REG2;
             (*pMyDisasm).Operand1.OpSize = 64;
+            /* the memory operand is conditionally written */
+            (*pMyDisasm).Operand2.AccessMode = WRITE;
 
             FillFlags(pMyDisasm, 23);
             GV.EIP_ += GV.DECALAGE_EIP+2;

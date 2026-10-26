@@ -36,7 +36,8 @@ void __bea_callspec__ G6_(PDISASM pMyDisasm)
     GV.MOD_= ((*((UInt8*)(UIntPtr) (GV.EIP_+1))) >> 6) & 0x3;
 
     if (GV.REGOPCODE == 0) {
-        if ((OperandSizeOld == 64) && (GV.MOD_== 0x3)) {
+        /* the register form is r16/r32/r64 according to the operand size */
+        if (GV.MOD_== 0x3) {
             GV.OperandSize = OperandSizeOld;
         }
         else {
@@ -53,7 +54,8 @@ void __bea_callspec__ G6_(PDISASM pMyDisasm)
         GV.EIP_+= GV.DECALAGE_EIP+2;
     }
     else if (GV.REGOPCODE == 1) {
-        if ((OperandSizeOld == 64) && (GV.MOD_== 0x3)) {
+        /* the register form is r16/r32/r64 according to the operand size */
+        if (GV.MOD_== 0x3) {
             GV.OperandSize = OperandSizeOld;
         }
         else {
@@ -102,6 +104,8 @@ void __bea_callspec__ G6_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;(*pMyDisasm).Operand2.Registers.type = SPECIAL_REG;
         (*pMyDisasm).Operand2.Registers.special = REG0;
         (*pMyDisasm).Operand2.OpSize = 16;
+        (*pMyDisasm).Operand1.AccessMode = READ;
+        (*pMyDisasm).Operand2.AccessMode = WRITE;
         GV.OperandSize = OperandSizeOld;
         GV.EIP_+= GV.DECALAGE_EIP+2;
     }
@@ -114,6 +118,8 @@ void __bea_callspec__ G6_(PDISASM pMyDisasm)
         (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;(*pMyDisasm).Operand2.Registers.type = SPECIAL_REG;
         (*pMyDisasm).Operand2.Registers.special = REG0;
         (*pMyDisasm).Operand2.OpSize = 16;
+        (*pMyDisasm).Operand1.AccessMode = READ;
+        (*pMyDisasm).Operand2.AccessMode = WRITE;
         GV.OperandSize = OperandSizeOld;
         GV.EIP_+= GV.DECALAGE_EIP+2;
     }

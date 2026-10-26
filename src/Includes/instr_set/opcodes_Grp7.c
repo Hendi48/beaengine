@@ -91,7 +91,8 @@
    }
    else {
      if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-     GV.MemDecoration = Arg1fword;
+     /* m16&32, m16&64 in 64-bit mode */
+     GV.MemDecoration = (GV.Architecture == 64) ? Arg1tbyte : Arg1fword;
      MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
      (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
      #ifndef BEA_LIGHT_DISASSEMBLY
@@ -189,7 +190,8 @@
    }
    else {
      if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-     GV.MemDecoration = Arg1fword;
+     /* m16&32, m16&64 in 64-bit mode */
+     GV.MemDecoration = (GV.Architecture == 64) ? Arg1tbyte : Arg1fword;
      MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
      #ifndef BEA_LIGHT_DISASSEMBLY
         (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sgdt ");
@@ -254,7 +256,8 @@ void __bea_callspec__ G7_regopcode2(PDISASM pMyDisasm)
    }
    else {
      if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-     GV.MemDecoration = Arg2fword;
+     /* m16&32, m16&64 in 64-bit mode */
+     GV.MemDecoration = (GV.Architecture == 64) ? Arg2tbyte : Arg2fword;
      MOD_RM(&(*pMyDisasm).Operand2, pMyDisasm);
      (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
      #ifndef BEA_LIGHT_DISASSEMBLY
@@ -340,7 +343,8 @@ void __bea_callspec__ G7_regopcode3(PDISASM pMyDisasm)
    }
    else {
      if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-     GV.MemDecoration = Arg2fword;
+     /* m16&32, m16&64 in 64-bit mode */
+     GV.MemDecoration = (GV.Architecture == 64) ? Arg2tbyte : Arg2fword;
      MOD_RM(&(*pMyDisasm).Operand2, pMyDisasm);
      (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
      #ifndef BEA_LIGHT_DISASSEMBLY
@@ -356,31 +360,25 @@ void __bea_callspec__ G7_regopcode3(PDISASM pMyDisasm)
 void __bea_callspec__ G7_regopcode7(PDISASM pMyDisasm)
 {
   if (GV.MOD_== 0x3) {
-    if (GV.Architecture == 64) {
-      if (GV.RM_ == 0x0) {
-       if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-       (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
-       #ifndef BEA_LIGHT_DISASSEMBLY
-          (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "swapgs ");
-       #endif
-       GV.EIP_+= GV.DECALAGE_EIP+2;
-      }
-      else {
-         FailDecode(pMyDisasm);
-      }
+    if ((GV.Architecture == 64) && (GV.RM_ == 0x0)) {
+      if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
+      (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
+      #ifndef BEA_LIGHT_DISASSEMBLY
+         (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "swapgs ");
+      #endif
+      GV.EIP_+= GV.DECALAGE_EIP+2;
+    }
+    /* rdtscp is valid in every mode */
+    else if (GV.RM_ == 0x1) {
+      if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
+      (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
+      #ifndef BEA_LIGHT_DISASSEMBLY
+        (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rdtscp ");
+      #endif
+      GV.EIP_+= GV.DECALAGE_EIP+2;
     }
     else {
-      if (GV.RM_ == 0x1) {
-        if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-        (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
-        #ifndef BEA_LIGHT_DISASSEMBLY
-          (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "rdtscp ");
-        #endif
-        GV.EIP_+= GV.DECALAGE_EIP+2;
-      }
-      else {
-        FailDecode(pMyDisasm);
-      }
+      FailDecode(pMyDisasm);
     }
   }
  else {
@@ -423,16 +421,17 @@ void __bea_callspec__ G7_(PDISASM pMyDisasm)
         FailDecode(pMyDisasm);
         return;
       }
-      GV.MemDecoration = Arg2word;
-      MOD_RM(&(*pMyDisasm).Operand2, pMyDisasm);
+      /* smsw r/m16 (r32/r64 for the register form) <- cr0 */
+      GV.MemDecoration = Arg1word;
+      MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
       (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
       #ifndef BEA_LIGHT_DISASSEMBLY
          (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "smsw ");
       #endif
-      (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;
-      (*pMyDisasm).Operand1.Registers.type = CR_REG;
-      (*pMyDisasm).Operand1.Registers.cr = REG0;
-      (*pMyDisasm).Operand1.OpSize = 16;
+      (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;
+      (*pMyDisasm).Operand2.Registers.type = CR_REG;
+      (*pMyDisasm).Operand2.Registers.cr = REG0;
+      (*pMyDisasm).Operand2.OpSize = 16;
       GV.EIP_+= GV.DECALAGE_EIP+2;
       break;
     case 5:
@@ -455,16 +454,18 @@ void __bea_callspec__ G7_(PDISASM pMyDisasm)
       break;
     case 6:
       if (GV.VEX.state == InUsePrefix) { FailDecode(pMyDisasm); return; }
-      GV.MemDecoration = Arg1word;
-      MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
+      /* cr0 <- lmsw r/m16 */
+      GV.MemDecoration = Arg2word;
+      GV.OperandSize = 16;
+      MOD_RM(&(*pMyDisasm).Operand2, pMyDisasm);
       (*pMyDisasm).Instruction.Category = SYSTEM_INSTRUCTION;
       #ifndef BEA_LIGHT_DISASSEMBLY
          (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "lmsw ");
       #endif
-      (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;
-      (*pMyDisasm).Operand2.Registers.type = CR_REG;
-      (*pMyDisasm).Operand2.Registers.cr = REG0;
-      (*pMyDisasm).Operand2.OpSize = 16;
+      (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;
+      (*pMyDisasm).Operand1.Registers.type = CR_REG;
+      (*pMyDisasm).Operand1.Registers.cr = REG0;
+      (*pMyDisasm).Operand1.OpSize = 16;
       GV.EIP_+= GV.DECALAGE_EIP+2;
       break;
     case 7:

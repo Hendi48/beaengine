@@ -62,6 +62,10 @@ void __bea_callspec__ CompleteInstructionFields (PDISASM pMyDisasm)
     ((*pMyDisasm).Instruction.BranchType == CallType)) {
     (*pMyDisasm).Operand1.AccessMode = READ;
   }
+  /* an immediate is never written (int imm8, enter imm16, imm8, out imm8, ...) */
+  if (((*pMyDisasm).Operand1.OpType & 0xF0000) == CONSTANT_TYPE) {
+    (*pMyDisasm).Operand1.AccessMode = READ;
+  }
   if ((*pMyDisasm).Prefix.LockPrefix == InvalidPrefix) {
     GV.ERROR_OPCODE = UD_;
   }
@@ -907,6 +911,17 @@ int __bea_callspec__ Security(int len, PDISASM pMyDisasm)
     return 0;
   }
   return 1;
+}
+
+/* ====================================================================
+ * Size of a push/pop stack slot : 64 bits in 64-bit mode unless 66h
+ * ==================================================================== */
+Int32 __bea_callspec__ StackOperandSize(PDISASM pMyDisasm)
+{
+  if ((GV.Architecture == 64) && (GV.OperandSize != 16)) {
+    return 64;
+  }
+  return GV.OperandSize;
 }
 
 /* ====================================================================

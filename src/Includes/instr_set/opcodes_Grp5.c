@@ -86,7 +86,8 @@ void __bea_callspec__ G5_Ev(PDISASM pMyDisasm)
                (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "call far ");
             #endif
         }
-        GV.MemDecoration = Arg1fword;
+        /* far pointer m16:16, m16:32 or m16:64 */
+        GV.MemDecoration = (GV.OperandSize == 64) ? Arg1tbyte : (GV.OperandSize == 32) ? Arg1fword : Arg1dword;
         MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
         GV.EIP_ += GV.DECALAGE_EIP+2;
         (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
@@ -125,7 +126,8 @@ void __bea_callspec__ G5_Ev(PDISASM pMyDisasm)
                (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "jmp far ");
             #endif
         }
-        GV.MemDecoration = Arg1fword;
+        /* far pointer m16:16, m16:32 or m16:64 */
+        GV.MemDecoration = (GV.OperandSize == 64) ? Arg1tbyte : (GV.OperandSize == 32) ? Arg1fword : Arg1dword;
         MOD_RM(&(*pMyDisasm).Operand1, pMyDisasm);
         GV.EIP_ += GV.DECALAGE_EIP+2;
     }
