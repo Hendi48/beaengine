@@ -83,7 +83,9 @@ INSTRTYPE STRUCT
     Flags                   EFLStruct <>
     AddrValue               QWORD   0
     Immediat                QWORD   0
+    ImmediatValue           QWORD   0
     ImplicitModifiedRegs    REGISTERTYPE <0>
+    ImplicitReadGpr         QWORD   0
 INSTRTYPE ENDS
 
 OPTYPE STRUCT
@@ -102,6 +104,7 @@ _Disasm STRUCT
     EIP             DWORD   0
     VirtualAddr     QWORD   0
     SecurityBlock   DWORD   0
+    Length_         DWORD   0   ; Length (LENGTH is a MASM operator)
     CompleteInstr   BYTE    64 dup(0)
     Archi           DWORD   0
     Options         QWORD   0
@@ -112,7 +115,7 @@ _Disasm STRUCT
     Operand4       OPTYPE <>
     Prefix          PREFIXINFO <>
     Error          DWORD   0
-    Reserved_       DWORD   48 dup(0)
+    Reserved_       DWORD   43 dup(0)
 _Disasm ENDS
 
 Disasm  PROTO :DWORD

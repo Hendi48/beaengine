@@ -88,7 +88,9 @@ class INSTRTYPE(Structure):
               ("Flags", EFLStruct),
               ("AddrValue", c_uint64),
               ("Immediat", c_int64),
-              ("ImplicitModifiedRegs", REGISTERTYPE)]
+              ("ImmediatValue", c_int64),
+              ("ImplicitModifiedRegs", REGISTERTYPE),
+              ("ImplicitReadGpr", c_int64)]
 
 class OPTYPE(Structure):
    _pack_= 1
@@ -159,7 +161,6 @@ class InternalDatas(Structure):
                 ('PrefRepne', c_uint32),
                 ('SEGMENTREGS', c_uint32),
                 ('SEGMENTFS', c_uint32),
-                ('third_arg', c_uint32),
                 ('OPTIONS', c_uint64),
                 ('ERROR_OPCODE', c_uint32),
                 ('REX', REX_Struct),
@@ -168,6 +169,7 @@ class InternalDatas(Structure):
                 ('EVEX', EVEX_Struct),
                 ('VSIB_', c_uint32),
                 ('Register_', c_uint32),
+                ('Padding_', c_uint8 * (2 + 2 * (8 - sizeof(c_void_p)))),
                 ]
 
 class INSTRUCTION(Structure):
@@ -175,6 +177,7 @@ class INSTRUCTION(Structure):
     _fields_= [("offset", c_void_p),                # EIP
                ("VirtualAddr", c_uint64),
                ("SecurityBlock", c_uint32),
+               ("Length", c_uint32),
                ("repr", c_char * INSTRUCT_LENGTH),  # CompleteInstr
                ("Archi", c_uint32),
                ("Options", c_uint64),

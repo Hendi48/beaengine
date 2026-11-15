@@ -143,7 +143,9 @@ typedef struct  {
    EFLStruct Flags;
    UInt64 AddrValue;
    Int64 Immediat;
+   Int64 ImmediatValue;         /* immediate as used by the instruction (sign- or zero-extended to 64 bits), 0 if none */
    REGISTERTYPE ImplicitModifiedRegs;
+   Int64 ImplicitReadGpr;       /* GPRs read implicitly (REG0..REG15 bits), not repeated if a READ register operand */
 } INSTRTYPE;
 #pragma pack()
 
@@ -189,7 +191,6 @@ typedef struct {
    Int32 PrefRepne;
    UInt32 SEGMENTREGS;
    UInt32 SEGMENTFS;
-   Int32 third_arg;
    UInt64 OPTIONS;
    Int32 ERROR_OPCODE;
    REX_Struct REX;
@@ -198,6 +199,9 @@ typedef struct {
    EVEX_Struct EVEX;
    Int32 VSIB_;
    Int32 Register_;
+   /* pads InternalDatas to 172 bytes (43 dwords) on 32- and 64-bit targets, so the language headers
+      can declare Reserved_ as a fixed array */
+   UInt8 Padding_[2 + 2 * (sizeof(UInt64) - sizeof(UIntPtr))];
 } InternalDatas;
 #pragma pack()
 
@@ -207,6 +211,7 @@ typedef struct _Disasm {
    UIntPtr EIP;
    UInt64 VirtualAddr;
    UInt32 SecurityBlock;
+   UInt32 Length;               /* == return value of Disasm when > 0, else 0 */
    char CompleteInstr[INSTRUCT_LENGTH];
    UInt32 Archi;
    UInt64 Options;

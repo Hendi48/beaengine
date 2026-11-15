@@ -88,7 +88,9 @@ struct INSTRTYPE
     Flags                   EFLStruct
     AddrValue               dq   0
     Immediat                dq   0
+    ImmediatValue           dq   0
     ImplicitModifiedRegs    REGISTERTYPE
+    ImplicitReadGpr         dq   0
 ends
 
 
@@ -109,6 +111,7 @@ struct _Disasm
     EIP             dd   0
     VirtualAddr     dq   0
     SecurityBlock   dd   0
+    Length          dd   0
     CompleteInstr   db   64 dup(0)
     Archi           dd   0
     Options         dq   0
@@ -119,7 +122,7 @@ struct _Disasm
     Operand4       OPTYPE
     Prefix          PREFIXINFO
     Error          dd   0
-    Reserved_       dd   48 dup(0)
+    Reserved_       dd   43 dup(0)
 ends
 
   LowPosition   equ   0

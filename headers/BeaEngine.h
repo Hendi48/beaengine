@@ -104,7 +104,9 @@ typedef struct  {
    EFLStruct Flags;
    UInt64 AddrValue;
    Int64 Immediat;
+   Int64 ImmediatValue;
    REGISTERTYPE ImplicitModifiedRegs;
+   Int64 ImplicitReadGpr;
 } INSTRTYPE;
 #pragma pack()
 
@@ -128,6 +130,7 @@ typedef struct _Disasm {
    UIntPtr EIP;
    UInt64 VirtualAddr;
    UInt32 SecurityBlock;
+   UInt32 Length;
    char CompleteInstr[INSTRUCT_LENGTH];
    UInt32 Archi;
    UInt64 Options;
@@ -138,7 +141,7 @@ typedef struct _Disasm {
    OPTYPE Operand4;
    PREFIXINFO Prefix;
    Int32 Error;
-   UInt32 Reserved_[48];
+   UInt32 Reserved_[43];
 } DISASM, *PDISASM, *LPDISASM;
 #pragma pack()
 

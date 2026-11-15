@@ -93,7 +93,9 @@ namespace Bea
     public EFLStruct Flags;
     public UInt64 AddrValue;
     public Int64 Immediat;
+    public Int64 ImmediatValue;
     public RegisterType ImplicitModifiedRegs;
+    public Int64 ImplicitReadGpr;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -116,6 +118,7 @@ namespace Bea
     public IntPtr EIP;
     public UInt64 VirtualAddr;
     public UInt32 SecurityBlock;
+    public UInt32 Length;
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
     public string CompleteInstr;
     public UInt32 Archi;
@@ -127,7 +130,7 @@ namespace Bea
     public ArgumentType Operand4;
     public PrefixInfo Prefix;
     public Int32 Error;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 48, ArraySubType = UnmanagedType.U4)]
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 43, ArraySubType = UnmanagedType.U4)]
     UInt32[] Reserved_;
   }
 }

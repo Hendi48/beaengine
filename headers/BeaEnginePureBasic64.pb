@@ -84,7 +84,9 @@ Structure INSTRTYPE
   Flags.EFLStruct
   AddrValue.q
   Immediat.q
+  ImmediatValue.q
   ImplicitModifiedRegs.REGISTERTYPE
+  ImplicitReadGpr.q
 EndStructure
 Global Instrtype.INSTRTYPE
 
@@ -104,6 +106,7 @@ Structure _Disasm
   EIP.q
   VirtualAddr.q
   SecurityBlock.l
+  Length.l
   CompleteInstr.b[64]
   Archi.l
   Options.q
@@ -114,7 +117,7 @@ Structure _Disasm
   Operand4.OPTYPE
   Prefix.PREFIXINFO
   Error.l
-  Reserved_.l[48]
+  Reserved_.l[43]
 EndStructure
 Global MyDisasm._Disasm
 

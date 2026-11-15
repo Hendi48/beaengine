@@ -2,7 +2,7 @@
 //
 // Delphi Static lib for BeaEngine 5.x
 //
-// Last update: 2022-03-15
+// Last update: 2026-11-15
 // Supported compilers: Delphi 2009 - Delphi 11
 // ====================================================================
 // BeaEngine.pas convert by Vince
@@ -116,7 +116,16 @@ type
     Flags: TEFLStruct;
     AddrValue: UInt64;
     Immediat: Int64;
+    // the first immediate as the instruction uses it, 64-bit: sign-extended from its encoded size
+    // (add/mov/push/test/imul...), zero-extended for counts, ports, vectors, stack sizes and selector
+    // bytes (shifts, bt*, in/out, int, ret, enter, SSE imm8). 0 without an immediate.
+    // Immediat stays the raw encoded value.
+    ImmediatValue: Int64;
     ImplicitModifiedRegs: TREGISTERTYPE;
+    // REG0..REG15 mask of GPRs read without being encoded (rsp of push/pop/call/ret, rsi/rdi/rcx of
+    // string ops, rax/rdx of mul/div, ...). Registers already reported as a register operand with
+    // READ access are not repeated.
+    ImplicitReadGpr: Int64;
   end;
 
   TOPTYPE = packed record
@@ -134,6 +143,8 @@ type
     EIP: UIntPtr;
     VirtualAddr: UInt64;
     SecurityBlock: UInt32;
+    // Disasm's return value when > 0, else 0
+    Length: UInt32;
     CompleteInstr: array[0..(INSTRUCT_LENGTH - 1)] of AnsiChar;
     Archi: UInt32;
     Options: UInt64;
@@ -144,10 +155,15 @@ type
     Operand4: TOPTYPE;
     Prefix: TPREFIXINFO;
     Error: UInt32;
-    Reserved_: array[0..48] of UInt32;
+    Reserved_: array[0..42] of UInt32;
   end;
   PDISASM = ^TDisasm;
   LPDISASM = ^TDisasm;
+
+// must match sizeof(DISASM) of the linked object: 1244 bytes (32-bit), 1248 bytes (64-bit)
+{$IF SizeOf(TDisasm) <> 1240 + SizeOf(Pointer)}
+  {$MESSAGE FATAL 'TDisasm does not match the DISASM layout of BeaEngine.h'}
+{$IFEND}
 
 const
   ESReg = 1;

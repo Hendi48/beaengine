@@ -87,7 +87,9 @@ STRUC INSTRTYPE
     Flags:                   resb   EFLStruct_size
     AddrValue:               resq   1
     Immediat:                resq   1
+    ImmediatValue:           resq   1
     ImplicitModifiedRegs:    resb   REGISTERTYPE_size
+    ImplicitReadGpr:         resq   1
 ENDSTRUC
 
 STRUC OPTYPE
@@ -107,6 +109,7 @@ STRUC _Disasm
     EIP:             resq   1
     VirtualAddr:     resq   1
     SecurityBlock:   resd   1
+    Length:          resd   1
     CompleteInstr:   resb   64
     Archi:           resd   1
     Options:         resq   1
@@ -117,7 +120,7 @@ STRUC _Disasm
     Operand4:       resb   OPTYPE_size
     Prefix:          resb   PREFIXINFO_size
     Error:          resd   1
-    Reserved_        resd   48
+    Reserved_        resd   43
 ENDSTRUC
 
 	LowPosition		equ		0

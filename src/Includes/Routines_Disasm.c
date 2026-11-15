@@ -41,6 +41,9 @@ int __bea_callspec__ Disasm (PDISASM pMyDisasm)
         #ifndef BEA_LIGHT_DISASSEMBLY
         BuildCompleteInstruction(pMyDisasm);
         #endif
+        FillImmediatValue(pMyDisasm);
+        FillImplicitReadGpr(pMyDisasm);
+        (*pMyDisasm).Length = (UInt32) (GV.EIP_-(*pMyDisasm).EIP);
         return (int) (GV.EIP_-(*pMyDisasm).EIP);
       }
     }
@@ -98,6 +101,163 @@ int __bea_callspec__ IsStringInstruction(PDISASM pMyDisasm)
   if (((*pMyDisasm).Instruction.Category & 0xFFFF) == STRING_INSTRUCTION) return 1;
   return ((*pMyDisasm).Instruction.Category == GENERAL_PURPOSE_INSTRUCTION+InOutINSTRUCTION) &&
          (opc >= 0x6c) && (opc <= 0x6f);
+}
+
+/* ====================================================================
+ * ImmediatValue : the first immediate operand (CONSTANT_TYPE without RELATIVE_)
+ * as the instruction uses it. Counts, ports, vectors, stack sizes and
+ * selector bytes (shifts, bt*, shld/shrd, in/out, int, ret, enter, aam/aad,
+ * all non general purpose instructions) are zero-extended, the others
+ * (arithmetic, mov, push, test, imul...) are sign-extended from their
+ * encoded size. Instruction.Immediat is not changed.
+ * ==================================================================== */
+void __bea_callspec__ FillImmediatValue(PDISASM pMyDisasm)
+{
+  OPTYPE *op = 0;
+  UInt64 raw;
+  Int32 size, opc = (*pMyDisasm).Instruction.Opcode;
+  int zero_extend;
+
+  if (IsImmediateOperand(&(*pMyDisasm).Operand1)) op = &(*pMyDisasm).Operand1;
+  else if (IsImmediateOperand(&(*pMyDisasm).Operand2)) op = &(*pMyDisasm).Operand2;
+  else if (IsImmediateOperand(&(*pMyDisasm).Operand3)) op = &(*pMyDisasm).Operand3;
+  else if (IsImmediateOperand(&(*pMyDisasm).Operand4)) op = &(*pMyDisasm).Operand4;
+  if (op == 0) return;
+  size = (*op).OpSize;
+  raw = (UInt64) (*pMyDisasm).Instruction.Immediat;
+  if (opc == 0xc8) {
+    /* enter imm16, imm8 : Instruction.Immediat is not set, imm16 is 3 bytes before the end */
+    raw = *((UInt16*)(UIntPtr) (GV.EIP_-3));
+    size = 16;
+  }
+  if ((size > 0) && (size < 64)) raw &= (((UInt64) 1) << size) - 1;
+  zero_extend = (((*pMyDisasm).Instruction.Category & 0xFFFF0000) != GENERAL_PURPOSE_INSTRUCTION);
+  switch (opc) {
+    case 0xc0: case 0xc1: case 0xd0: case 0xd1:
+    case 0xc2: case 0xca: case 0xc8: case 0xcd:
+    case 0xd4: case 0xd5:
+    case 0xe4: case 0xe5: case 0xe6: case 0xe7:
+    case 0x0fa4: case 0x0fac: case 0x0fba:
+      zero_extend = 1;
+      break;
+    default:
+      break;
+  }
+  if (!zero_extend && (size > 0) && (size < 64) && ((raw >> (size - 1)) & 1)) {
+    raw |= ~((((UInt64) 1) << size) - 1);
+  }
+  (*pMyDisasm).Instruction.ImmediatValue = (Int64) raw;
+}
+
+int __bea_callspec__ IsImmediateOperand(OPTYPE* pMyOperand)
+{
+  return ((((*pMyOperand).OpType & 0xF0000) == CONSTANT_TYPE) && (((*pMyOperand).OpType & RELATIVE_) == 0));
+}
+
+/* ====================================================================
+ * ImplicitReadGpr : general purpose registers an instruction reads without
+ * encoding them (stack pointer, string registers, rAX/rDX of mul/div ...).
+ * A register already reported as a READ register operand is not repeated.
+ * ==================================================================== */
+void __bea_callspec__ FillImplicitReadGpr(PDISASM pMyDisasm)
+{
+  Int64 r = 0;
+  Int32 opc = (*pMyDisasm).Instruction.Opcode;
+  UInt8 *start = (UInt8*)(UIntPtr) (*pMyDisasm).EIP + (*pMyDisasm).Prefix.Number;
+  UInt8 modrm = 0;
+  int reg, rep;
+
+  rep = ((*pMyDisasm).Prefix.RepPrefix == InUsePrefix) || ((*pMyDisasm).Prefix.RepnePrefix == InUsePrefix);
+  if ((GV.VEX.state == InUsePrefix) || (GV.EVEX.state == InUsePrefix)) {
+    /* vmaskmovdqu is the only VEX instruction with an implicit gpr */
+    if (opc == 0x0ff7) (*pMyDisasm).Instruction.ImplicitReadGpr = REG7;
+    return;
+  }
+  if ((opc == 0xf6) || (opc == 0xf7) || (opc == 0xff) || (opc == 0x8f)) modrm = start[1];
+  if ((opc == 0x0f01) || (opc == 0x0fae) || (opc == 0x0fc7)) modrm = start[2];
+  reg = (modrm >> 3) & 7;
+  switch (opc) {
+    /* stack */
+    case 0x06: case 0x0e: case 0x16: case 0x1e: case 0x07: case 0x17: case 0x1f:
+    case 0x50: case 0x51: case 0x52: case 0x53: case 0x54: case 0x55: case 0x56: case 0x57:
+    case 0x58: case 0x59: case 0x5a: case 0x5b: case 0x5c: case 0x5d: case 0x5e: case 0x5f:
+    case 0x61: case 0x68: case 0x6a: case 0x9a: case 0x9c: case 0x9d:
+    case 0xc2: case 0xc3: case 0xca: case 0xcb: case 0xcc: case 0xcd: case 0xce: case 0xcf:
+    case 0xe8: case 0xf1:
+    case 0x0fa0: case 0x0fa1: case 0x0fa8: case 0x0fa9:
+      r = REG4; break;
+    case 0x60: /* pusha stores all eight registers */
+      r = REG0+REG1+REG2+REG3+REG4+REG5+REG6+REG7; break;
+    case 0x8f: if (reg == 0) r = REG4; break;
+    case 0xff: if ((reg == 2) || (reg == 3) || (reg == 6)) r = REG4; break;
+    case 0xc8: r = REG4+REG5; break;                /* enter pushes rbp */
+    case 0xc9: r = REG5; break;                     /* leave: rsp = rbp, then pop rbp */
+    /* accumulator */
+    case 0x27: case 0x2f: case 0x37: case 0x3f: case 0xd4: case 0xd5:
+    case 0x98: case 0x99: case 0x9e:
+    case 0x0fb0: case 0x0fb1:
+      r = REG0; break;
+    case 0xd7: r = REG0+REG3; break;
+    case 0xf6:
+      if (reg >= 4) r = REG0;
+      break;
+    case 0xf7:
+      if ((reg == 4) || (reg == 5)) r = REG0;
+      else if (reg >= 6) r = REG0+REG2;
+      break;
+    /* string instructions */
+    case 0x6c: case 0x6d: r = REG7+REG2; break;
+    case 0x6e: case 0x6f: r = REG6+REG2; break;
+    case 0xa4: case 0xa5: case 0xa6: case 0xa7: r = REG6+REG7; break;
+    case 0xaa: case 0xab: case 0xae: case 0xaf: r = REG7+REG0; break;
+    case 0xac: case 0xad: r = REG6; break;
+    /* loops, in/out */
+    case 0xe0: case 0xe1: case 0xe2: case 0xe3: r = REG1; break;
+    case 0xe6: case 0xe7: r = REG0; break;
+    case 0xec: case 0xed: r = REG2; break;
+    case 0xee: case 0xef: r = REG2+REG0; break;
+    /* system */
+    case 0x0fa2: r = REG0+REG1; break;              /* cpuid */
+    case 0x0f30: r = REG0+REG1+REG2; break;         /* wrmsr */
+    case 0x0f32: case 0x0f33: r = REG1; break;      /* rdmsr, rdpmc */
+    case 0x0f35: r = REG1+REG2; break;              /* sysexit */
+    case 0x0f07: r = REG1+REG11; break;             /* sysret */
+    case 0x0f01:
+      if (modrm == 0xd0) r = REG1;                  /* xgetbv */
+      else if (modrm == 0xd1) r = REG0+REG1+REG2;   /* xsetbv */
+      else if (modrm == 0xc8) r = REG0+REG1+REG2;   /* monitor */
+      else if (modrm == 0xc9) r = REG0+REG1;        /* mwait */
+      else if (modrm == 0xdf) r = REG0+REG1;        /* invlpga */
+      break;
+    case 0x0fae:                                    /* xsave, xrstor, xsaveopt (edx:eax = feature mask) */
+      if ((modrm < 0xc0) && (reg >= 4) && (reg <= 6) && ((*pMyDisasm).Prefix.RepPrefix == 0) &&
+          ((*pMyDisasm).Prefix.RepnePrefix == 0) && ((*pMyDisasm).Prefix.OperandSize == 0)) r = REG0+REG2;
+      break;
+    case 0x0fc7:
+      if (modrm < 0xc0) {
+        if (reg == 1) r = REG0+REG1+REG2+REG3;      /* cmpxchg8b/16b */
+        else if ((reg >= 3) && (reg <= 5)) r = REG0+REG2;   /* xrstors, xsavec, xsaves */
+      }
+      break;
+    case 0x0ff7: r = REG7; break;                   /* maskmovq, maskmovdqu */
+    default: break;
+  }
+  if (rep && IsStringInstruction(pMyDisasm)) r |= REG1;
+  if (GV.Architecture != 64) r &= 0xff;
+  r &= ~ReadGprOperand(&(*pMyDisasm).Operand1);
+  r &= ~ReadGprOperand(&(*pMyDisasm).Operand2);
+  r &= ~ReadGprOperand(&(*pMyDisasm).Operand3);
+  r &= ~ReadGprOperand(&(*pMyDisasm).Operand4);
+  (*pMyDisasm).Instruction.ImplicitReadGpr = r;
+}
+
+Int64 __bea_callspec__ ReadGprOperand(OPTYPE* pMyOperand)
+{
+  if ((((*pMyOperand).OpType & 0xF0000) == REGISTER_TYPE) && ((*pMyOperand).Registers.type & GENERAL_REG) &&
+      ((*pMyOperand).AccessMode & READ)) {
+    return (*pMyOperand).Registers.gpr;
+  }
+  return 0;
 }
 
 /* ====================================================================
@@ -195,6 +355,7 @@ int __bea_callspec__ InitVariables (PDISASM pMyDisasm)
   (*pMyDisasm).Operand3.AccessMode = READ;
   (*pMyDisasm).Operand4.AccessMode = READ;
   (void) memset (&(*pMyDisasm).Instruction, 0, sizeof (INSTRTYPE));
+  (*pMyDisasm).Length = 0;
   GV.OPTIONS = (UInt32)(*pMyDisasm).Options;
   GV.SYNTAX_ = (UInt32)(*pMyDisasm).Options & 0xff00;
   GV.FORMATNUMBER = (UInt32)(*pMyDisasm).Options & PrefixedNumeral;
