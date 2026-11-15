@@ -75,7 +75,7 @@ STRUC REGISTERTYPE
    mem_management: resq 1
    mpx: resq 1
    opmask: resq 1
-   segment: resq 1
+   $segment: resq 1
    fpu: resq 1
 ENDSTRUC
 
@@ -120,7 +120,7 @@ STRUC _Disasm
     Operand4:       resb   OPTYPE_size
     Prefix:          resb   PREFIXINFO_size
     Error:          resd   1
-    Reserved_        resd   43
+    Reserved_:       resd   43
 ENDSTRUC
 
 	LowPosition		equ		0
@@ -165,12 +165,12 @@ ENDSTRUC
     SSSE3_INSTRUCTION             equ           70000h
     SSE41_INSTRUCTION             equ           80000h
     SSE42_INSTRUCTION             equ           90000h
-    SYSTEM_INSTRUCTION            equ           a0000h
-    VM_INSTRUCTION                equ           b0000h
-    UNDOCUMENTED_INSTRUCTION      equ           c0000h
-    AMD_INSTRUCTION               equ           d0000h
-    ILLEGAL_INSTRUCTION           equ           e0000h
-    AES_INSTRUCTION               equ           f0000h
+    SYSTEM_INSTRUCTION            equ           0a0000h
+    VM_INSTRUCTION                equ           0b0000h
+    UNDOCUMENTED_INSTRUCTION      equ           0c0000h
+    AMD_INSTRUCTION               equ           0d0000h
+    ILLEGAL_INSTRUCTION           equ           0e0000h
+    AES_INSTRUCTION               equ           0f0000h
     CLMUL_INSTRUCTION             equ          100000h
     AVX_INSTRUCTION               equ          110000h
     AVX2_INSTRUCTION              equ          120000h

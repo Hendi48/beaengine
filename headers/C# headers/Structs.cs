@@ -32,8 +32,8 @@ namespace Bea
     public byte BranchTaken;
     public byte BranchNotTaken;
     public REX_Struct REX;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-    public string alignment;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+    public byte[] alignment;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -76,8 +76,8 @@ namespace Bea
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public class MemoryType
   {
-    public Int32 BaseRegister;
-    public Int32 IndexRegister;
+    public Int64 BaseRegister;
+    public Int64 IndexRegister;
     public Int32 Scale;
     public Int64 Displacement;
   }
@@ -103,7 +103,7 @@ namespace Bea
   {
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
     public string OpMnemonic;
-    public Int32 OpType;
+    public Int64 OpType;
     public Int32 OpSize;
     public Int32 OpPosition;
     public UInt32 AccessMode;
