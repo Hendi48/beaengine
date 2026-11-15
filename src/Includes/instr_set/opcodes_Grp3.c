@@ -71,8 +71,8 @@ void __bea_callspec__ G3_Eb(PDISASM pMyDisasm)
         GV.OperandSize = 32;
         GV.EIP_ += GV.DECALAGE_EIP+2;
         (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
-        (*pMyDisasm).Operand1.Registers.gpr = REG0+REG2;
-        (*pMyDisasm).Operand1.OpSize = 8;
+        (*pMyDisasm).Operand1.Registers.gpr = REG0;
+        (*pMyDisasm).Operand1.OpSize = 16;
         (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG0;
         FillFlags(pMyDisasm, 70);
     }
@@ -87,8 +87,9 @@ void __bea_callspec__ G3_Eb(PDISASM pMyDisasm)
         GV.OperandSize = 32;
         GV.EIP_ += GV.DECALAGE_EIP+2;
         (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
-        (*pMyDisasm).Operand1.Registers.gpr = REG0+REG2;
-        (*pMyDisasm).Operand1.OpSize = 8;
+        (*pMyDisasm).Operand1.Registers.gpr = REG0;
+        (*pMyDisasm).Operand1.OpSize = 16;
+        (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG0;
         FillFlags(pMyDisasm, 38);
     }
     else if (GV.REGOPCODE == 6) {
@@ -102,8 +103,9 @@ void __bea_callspec__ G3_Eb(PDISASM pMyDisasm)
         GV.OperandSize = 32;
         GV.EIP_ += GV.DECALAGE_EIP+2;
         (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
-        (*pMyDisasm).Operand1.Registers.gpr = REG0+REG2;
-        (*pMyDisasm).Operand1.OpSize = 8;
+        (*pMyDisasm).Operand1.Registers.gpr = REG0;
+        (*pMyDisasm).Operand1.OpSize = 16;
+        (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG0;
         FillFlags(pMyDisasm, 31);
     }
     else if (GV.REGOPCODE == 7) {
@@ -117,8 +119,8 @@ void __bea_callspec__ G3_Eb(PDISASM pMyDisasm)
         GV.OperandSize = 32;
         GV.EIP_ += GV.DECALAGE_EIP+2;
         (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;(*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
-        (*pMyDisasm).Operand1.Registers.gpr = REG0+REG2;
-        (*pMyDisasm).Operand1.OpSize = 8;
+        (*pMyDisasm).Operand1.Registers.gpr = REG0;
+        (*pMyDisasm).Operand1.OpSize = 16;
         (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG0;
         FillFlags(pMyDisasm, 37);
     }
