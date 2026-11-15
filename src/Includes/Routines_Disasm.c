@@ -72,10 +72,32 @@ void __bea_callspec__ CompleteInstructionFields (PDISASM pMyDisasm)
     GV.ERROR_OPCODE = UD_;
   }  /* rep/repe/repne string instructions count rCX down */
   if ((((*pMyDisasm).Prefix.RepPrefix == InUsePrefix) || ((*pMyDisasm).Prefix.RepnePrefix == InUsePrefix)) &&
-      (((*pMyDisasm).Instruction.Category & 0xFFFF) == STRING_INSTRUCTION)) {
+      IsStringInstruction(pMyDisasm)) {
     (*pMyDisasm).Instruction.ImplicitModifiedRegs.type |= GENERAL_REG;
     (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr |= REG1;
   }
+  /* ins/outs advance rDI/rSI (their category is InOutINSTRUCTION, not STRING_INSTRUCTION) */
+  if ((*pMyDisasm).Instruction.Category == GENERAL_PURPOSE_INSTRUCTION+InOutINSTRUCTION) {
+    if (((*pMyDisasm).Instruction.Opcode == 0x6c) || ((*pMyDisasm).Instruction.Opcode == 0x6d)) {
+      (*pMyDisasm).Instruction.ImplicitModifiedRegs.type |= GENERAL_REG;
+      (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr |= REG7;
+    }
+    else if (((*pMyDisasm).Instruction.Opcode == 0x6e) || ((*pMyDisasm).Instruction.Opcode == 0x6f)) {
+      (*pMyDisasm).Instruction.ImplicitModifiedRegs.type |= GENERAL_REG;
+      (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr |= REG6;
+    }
+  }
+}
+
+/* ====================================================================
+ * movs/cmps/stos/lods/scas and ins/outs (the instructions rep applies to)
+ * ==================================================================== */
+int __bea_callspec__ IsStringInstruction(PDISASM pMyDisasm)
+{
+  Int32 opc = (*pMyDisasm).Instruction.Opcode;
+  if (((*pMyDisasm).Instruction.Category & 0xFFFF) == STRING_INSTRUCTION) return 1;
+  return ((*pMyDisasm).Instruction.Category == GENERAL_PURPOSE_INSTRUCTION+InOutINSTRUCTION) &&
+         (opc >= 0x6c) && (opc <= 0x6f);
 }
 
 /* ====================================================================

@@ -2748,6 +2748,7 @@ void __bea_callspec__ iret_(PDISASM pMyDisasm)
 {
     (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+CONTROL_TRANSFER;
     (*pMyDisasm).Instruction.BranchType = RetType;
+    (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
     if (GV.OperandSize ==64) {
         #ifndef BEA_LIGHT_DISASSEMBLY
            (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "iretq ");
@@ -7888,6 +7889,7 @@ void __bea_callspec__ sysenter_(PDISASM pMyDisasm)
      (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sysenter ");
   #endif
   GV.EIP_++;
+  (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
 }
 
 /* =======================================
@@ -7904,6 +7906,7 @@ void __bea_callspec__ sysexit_(PDISASM pMyDisasm)
      (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "sysexit ");
   #endif
   GV.EIP_++;
+  (*pMyDisasm).Instruction.ImplicitModifiedRegs.type = GENERAL_REG; (*pMyDisasm).Instruction.ImplicitModifiedRegs.gpr = REG4;
 }
 
 /* =======================================

@@ -74,6 +74,7 @@ void __bea_callspec__ OperandSize8RM(OPTYPE*, PDISASM, size_t, int);
 /* ====================================== Routines_Disasm */
 void __bea_callspec__ ResetREX(PDISASM);
 void __bea_callspec__ CompleteInstructionFields (PDISASM);
+int __bea_callspec__ IsStringInstruction (PDISASM);
 void __bea_callspec__ EbGb(PDISASM);
 void __bea_callspec__ EvGv(PDISASM);
 void __bea_callspec__ EvIb(PDISASM);
