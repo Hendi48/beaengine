@@ -35,7 +35,7 @@ unit BeaEngineDelphi;
 
 interface
 
-uses Windows;
+//uses Windows;
 
 const
   INSTRUCT_LENGTH = 64;
@@ -311,21 +311,21 @@ const
   READ = $1;
   WRITE = $2;
 
-  /// <summary>RAX / MM0 / ST0 / XMM0 / CR0 / DR0 / GDTR / ES</summary>
+  // RAX / MM0 / ST0 / XMM0 / CR0 / DR0 / GDTR / ES
   REG0 = $1;
-  /// <summary>RCX / MM1 / ST1 / XMM1 / CR1 / DR1 / LDTR / CS</summary>
+  // RCX / MM1 / ST1 / XMM1 / CR1 / DR1 / LDTR / CS
   REG1 = $2;
-  /// <summary>RDX / MM2 / ST2 / XMM2 / CR2 / DR2 / IDTR / SS</summary>
+  // RDX / MM2 / ST2 / XMM2 / CR2 / DR2 / IDTR / SS
   REG2 = $4;
-  /// <summary>RBX / MM3 / ST3 / XMM3 / CR3 / DR3 / TR   / DS</summary>
+  // RBX / MM3 / ST3 / XMM3 / CR3 / DR3 / TR   / DS
   REG3 = $8;
-  /// <summary>RSP / MM4 / ST4 / XMM4 / CR4 / DR4 / ---- / FS</summary>
+  // RSP / MM4 / ST4 / XMM4 / CR4 / DR4 / ---- / FS
   REG4 = $10;
-  /// <summary>RBP / MM5 / ST5 / XMM5 / CR5 / DR5 / ---- / GS</summary>
+  // RBP / MM5 / ST5 / XMM5 / CR5 / DR5 / ---- / GS
   REG5 = $20;
-  /// <summary>RSI / MM6 / ST6 / XMM6 / CR6 / DR6 / ---- / --</summary>
+  // RSI / MM6 / ST6 / XMM6 / CR6 / DR6 / ---- / --
   REG6 = $40;
-  /// <summary>RDI / MM7 / ST7 / XMM7 / CR7 / DR7 / ---- / --</summary>
+  // RDI / MM7 / ST7 / XMM7 / CR7 / DR7 / ---- / --
   REG7 = $80;
   REG8 = $100;
   REG9 = $200;
@@ -366,12 +366,20 @@ function BeaEngineRevision: PAnsiChar; stdcall;
 implementation
 
 {$IFNDEF USEDLL}
-{$IFNDEF WIN64}
+{$IFDEF WIN32}
 {$L BeaEngineLib.obj}
 uses SysUtils;
-{$ELSE}
+{$ENDIF}
+{$IFDEF WIN64}
 {$L BeaEngineLib64.obj}
-uses AnsiStrings;
+uses {$IFNDEF FPC}AnsiStrings{$ELSE}SysUtils{$ENDIF};
+{$ENDIF}
+{$IFDEF LINUX}
+{$IFDEF CPUX64}
+{$L BeaEngineLib64.o}
+{$ENDIF}
+{$LINKLIB c} // BeaEngine calls into libc (strcpy, strlen, sprintf, ...)
+uses SysUtils;
 {$ENDIF}
 
 function {$IFNDEF WIN64}_strcmp{$ELSE}strcmp{$ENDIF}(Str1, Str2: PAnsiChar): Integer; cdecl;
@@ -391,17 +399,19 @@ end;
 
 function {$IFNDEF WIN64}_memset{$ELSE}memset{$ENDIF}(Destination: Pointer; C: Integer; Count: NativeUInt): Pointer; cdecl;
 begin
-  FillMemory(Destination, Count, C);
+  FillChar(Destination, Count, C);
   Result := Destination;
 end;
 
 function _memcpy(Dst, src: Pointer; Count: Cardinal): Pointer; cdecl;
 begin
-  CopyMemory(Dst, src, Count);
+  Move(Src^, Dst^, Count);
   Result := Dst;
 end;
 
+{$IFDEF WINDOWS}
 function {$IFNDEF WIN64}_sprintf{$ELSE}sprintf{$ENDIF}(Buffer, Format: PAnsiChar): Integer; varargs; cdecl; external 'msvcrt.dll' name 'sprintf'; // not using user32_wsprintfA because it fails on %.16llX
+{$ENDIF}
 
 function Disasm(var aDisAsm: TDisasm): Integer; stdcall; external;
 function BeaEngineVersion: PAnsiChar; stdcall; external;
