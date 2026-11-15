@@ -1523,7 +1523,13 @@ size_t __bea_callspec__ interpretBase(OPTYPE* pMyOperand, size_t i, PDISASM pMyD
     #ifndef BEA_LIGHT_DISASSEMBLY
        i+= CopyFormattedNumber(pMyDisasm, (char*) (*pMyOperand).OpMnemonic+j,"%.8X",(Int64) *((UInt32*)(UIntPtr) (GV.EIP_+3)));
     #endif
-    (*pMyOperand).Memory.Displacement = *((UInt32*)(UIntPtr) (GV.EIP_+3));
+    /* 64-bit addressing sign-extends disp32 (like the base+disp32 forms); 32-bit keeps the raw value */
+    if (GV.AddressSize == 64) {
+      (*pMyOperand).Memory.Displacement = *((Int32*)(UIntPtr) (GV.EIP_+3));
+    }
+    else {
+      (*pMyOperand).Memory.Displacement = *((UInt32*)(UIntPtr) (GV.EIP_+3));
+    }
   }
   else {
     if (GV.SYNTAX_ == ATSyntax) {
