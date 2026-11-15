@@ -6243,13 +6243,17 @@ void __bea_callspec__ nop_(PDISASM pMyDisasm)
     }
     else {
         if (GV.REX.B_ == 1) {
-            if ((*pMyDisasm).Prefix.LockPrefix == InvalidPrefix) {
-                (*pMyDisasm).Prefix.LockPrefix = InUsePrefix;
-            }
+            /* xchg rAX, r8: same operands as xchg_ecx..xchg_edi (register form, LOCK is #UD) */
             (*pMyDisasm).Instruction.Category = GENERAL_PURPOSE_INSTRUCTION+DATA_TRANSFER;
             #ifndef BEA_LIGHT_DISASSEMBLY
                (void) strcpy ((*pMyDisasm).Instruction.Mnemonic, "xchg ");
             #endif
+            (*pMyDisasm).Operand1.OpType = REGISTER_TYPE;
+            (*pMyDisasm).Operand1.Registers.type = GENERAL_REG;
+            (*pMyDisasm).Operand1.Registers.gpr = REG0;
+            (*pMyDisasm).Operand2.OpType = REGISTER_TYPE;
+            (*pMyDisasm).Operand2.Registers.type = GENERAL_REG;
+            (*pMyDisasm).Operand2.Registers.gpr = REG8;
 
             if (GV.OperandSize == 64) {
                 #ifndef BEA_LIGHT_DISASSEMBLY
